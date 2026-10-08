@@ -84,12 +84,12 @@ export const slimes: Slime[] = [
     type1: "water",
     type2: null,
     locations: [
-      { locationId: "cave-1", levelRange: null, timeOfDay: "Both" },
-      { locationId: "cave-2", levelRange: null, timeOfDay: "Both" },
-      { locationId: "cave-3", levelRange: null, timeOfDay: "Both" },
-      { locationId: "hidden-shore-3", levelRange: null, timeOfDay: "Both" },
-      { locationId: "hidden-shore-4", levelRange: null, timeOfDay: "Both" },
-      { locationId: "hidden-shore-5", levelRange: null, timeOfDay: "Both" },
+      {locationId: "cave-1", levelRange: null, timeOfDay: "Both" },
+      {locationId: "cave-2", levelRange: null, timeOfDay: "Both" },
+      {locationId: "cave-3", levelRange: null, timeOfDay: "Both" },
+      {locationId: "hidden-shore-3", levelRange: null, timeOfDay: "Both" },
+      {locationId: "hidden-shore-4", levelRange: null, timeOfDay: "Both" },
+      {locationId: "hidden-shore-5", levelRange: null, timeOfDay: "Both" },
     ],
     traits: null,
     skills: ["water-ball"],
@@ -151,8 +151,8 @@ export const slimes: Slime[] = [
     type1: "wind",
     type2: null,
     locations: [
-      { locationId: "forest-path", levelRange: null, timeOfDay: "Both" },
-      { locationId: "misty-hill", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
+      {locationId: "forest-path", levelRange: null, timeOfDay: "Both" },
+      {locationId: "misty-hill", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
     ],
     traits: ["mining"],
     skills: ["wind-ball"],
@@ -165,7 +165,10 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "dark",
     type2: null,
-    locations: [{ locationId: "forest-path", levelRange: null, timeOfDay: "Night"}, { locationId: "misty-hill", levelRange: { min: 2, max: 4}, timeOfDay: "Night"}],
+    locations: [
+      {locationId: "forest-path", levelRange: null, timeOfDay: "Night"},
+      {locationId: "misty-hill", levelRange: { min: 2, max: 4}, timeOfDay: "Night"}
+    ],
     traits: ["mining"],
     skills: ["dark-orb", "dark-strike"],
     drops: ["tricky-hide","small-slime-fragment"],
@@ -177,7 +180,10 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "power",
     type2: null,
-    locations: [{locationId: "eerie-crossroads", levelRange: {min: 10, max: 10}, timeOfDay: "Both"},{locationId: "quiet-trail", levelRange: {min: 7, max: 9}, timeOfDay: "Both"}],
+    locations: [
+      {locationId: "eerie-crossroads", levelRange: {min: 10, max: 10}, timeOfDay: "Both"},
+      {locationId: "quiet-trail", levelRange: {min: 7, max: 9}, timeOfDay: "Both"}
+    ],
     traits: ["mining"],
     skills: ["striking-power", "power-drive"],
     drops: ["small-slime-fragment"],
@@ -189,7 +195,10 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "ice",
     type2: null,
-    locations: [{locationId: "eerie-crossroads", levelRange: null, timeOfDay: "Both"}, {locationId: "quiet-trail", levelRange: null, timeOfDay: "Both"}],
+    locations: [
+      {locationId: "eerie-crossroads", levelRange: null, timeOfDay: "Both"},
+      {locationId: "quiet-trail", levelRange: null, timeOfDay: "Both"}
+    ],
     traits: ["mining"],
     skills: ["ice-ball"],
     drops: ["small-slime-fragment"],
@@ -214,11 +223,9 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "magic",
     type2: "fire",
-    locations: [{
-      locationId: "misty-hill",
-      levelRange: {min:4, max:4},
-      timeOfDay: "Both"
-    }],
+    locations: [
+      {locationId: "misty-hill", levelRange: {min:4, max:4}, timeOfDay: "Both"}
+    ],
     traits: ["luminescence"],
     skills: null,
     drops: ["fire-spirits-mist","small-slime-fragment","glowing-core-fragment"],
@@ -242,11 +249,9 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "water",
     type2: "magic",
-    locations: [{
-      locationId: "north-gate",
-      levelRange: {min: 4, max: 6},
-      timeOfDay: "Both"
-    }],
+    locations: [
+      {locationId: "north-gate", levelRange: {min: 4, max: 6}, timeOfDay: "Both"}
+    ],
     traits: ["swimming"],
     skills: ["water-ball"],
     drops: ["small-slime-fragment","princes-orb","dewy-core-fragment"],
@@ -310,7 +315,9 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "grass",
     type2: "poison",
-    locations: [{locationId:"abandoned-farmland", levelRange: {min:5, max:7}, timeOfDay: "Night"}],
+    locations: [
+      {locationId:"abandoned-farmland", levelRange: {min:5, max:7}, timeOfDay: "Night"}
+    ],
     traits: ["bond"],
     skills: ["poison-ball"],
     drops: ["small-slime-fragment", "poison-mandrakes-leaf"],
@@ -325,7 +332,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: ["bond"],
     skills: null,
-    drops: ["small-slime-fragment"],
+    drops: null,
     synthesis: null
   },
   {
@@ -342,25 +349,240 @@ export const slimes: Slime[] = [
     drops: ["small-slime-fragment", "bass-scale", "dewy-core-fragment"],
     synthesis: null
   },
-  { id: 32, name: "Poison Bass", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
+  {
+    id: 32,
+    name: "Poison Bass",
+    dataStatus: "pending",
+    type1: "water",
+    type2: "poison",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment", "poison-bass-scale"],
+    synthesis: null
+  },
   { id: 33, name: null, dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 34, name: "Dwarf", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 35, name: "Kobold", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 36, name: "Wisp", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 37, name: "Thunder Wips", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 38, name: "Lizard", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 39, name: "Poison Lizard", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 40, name: "Electric Lizard", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 41, name: "Rusty", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 42, name: "Melon", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 43, name: "Aqua Melon", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 44, name: "Rotten Melon", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 45, name: "Ice Melon", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 46, name: "Slick", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 47, name: "Lightning Slick", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 48, name: "Hornet", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 49, name: "Poison Hornet", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
-  { id: 50, name: "Bolt Hornet", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
+  {
+    id: 34,
+    name: "Dwarf",
+    dataStatus: "pending",
+    type1: "magic",
+    type2: "dark",
+    locations: [
+      {locationId: "forgotten-glade", levelRange: null, timeOfDay: "Both"}
+    ],
+    traits: ["luminescence"],
+    skills: ["magic-orb"],
+    drops: ["small-slime-fragment", "wicked-membrane"],
+    synthesis: null
+  },
+  {
+    id: 35,
+    name: "Kobold",
+    dataStatus: "pending",
+    type1: "metal",
+    type2: null,
+    locations: [
+      {locationId: "cave-entrance", levelRange: {min:6, max:8}, timeOfDay: "Both"}
+    ],
+    traits: ["mining"],
+    skills: null,
+    drops: ["small-slime-fragment", "kobolds-crystal", "parched-core-fragment"],
+    synthesis: null
+  },
+  {
+    id: 36,
+    name: "Wisp",
+    dataStatus: "pending",
+    type1: "light",
+    type2: null,
+    locations: null,
+    traits: ["flight", "luminescence"],
+    skills: ["light-orb"],
+    drops: ["small-slime-fragment", "wisp-sigil"],
+    synthesis: null
+  },
+  {
+    id: 37,
+    name: "Thunder Wisp",
+    dataStatus: "pending",
+    type1: "light",
+    type2: "electric",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment"],
+    synthesis: null
+  },
+  {
+    id: 38,
+    name: "Lizard",
+    dataStatus: "pending",
+    type1: "ground",
+    type2: null,
+    locations: null,
+    traits: ["mining"],
+    skills: null,
+    drops: ["small-slime-fragment", "lizard-scale"],
+    synthesis: null
+  },
+  {
+    id: 39,
+    name: "Poison Lizard",
+    dataStatus: "pending",
+    type1: "poison",
+    type2: null,
+    locations: null,
+    traits: ["mining"],
+    skills: null,
+    drops: ["small-slime-fragment", "poison-lizard-scale"],
+    synthesis: null
+  },
+  {
+    id: 40,
+    name: "Electric Lizard",
+    dataStatus: "pending",
+    type1: "electric",
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment", "electric-lizard-scale"],
+    synthesis: null
+  },
+  {
+    id: 41,
+    name: "Rusty",
+    dataStatus: "pending",
+    type1: "metal",
+    type2: "dark",
+    locations: [
+      { locationId: "forgotten-glade", levelRange: null, timeOfDay: "Both" },
+      { locationId: "gloomy-crossroads", levelRange: null, timeOfDay: "Both" },
+    ],
+    traits: ["flight"],
+    skills: ["dark-orb"],
+    drops: ["small-slime-fragment", "rusty-sharp-blade"],
+    synthesis: null
+  },
+  {
+    id: 42,
+    name: "Melon",
+    dataStatus: "pending",
+    type1: "grass",
+    type2: "ground",
+    locations: [
+      { locationId: "hidden-coast-1", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-coast-2", levelRange: null, timeOfDay: "Both" },
+    ],
+    traits: ["bond"],
+    skills: ["leaf-boomerang", "leaf-spread"],
+    drops: ["small-slime-fragment", "melon-tentacle"],
+    synthesis: null
+  },
+  {
+    id: 43,
+    name: "Aqua Melon",
+    dataStatus: "pending",
+    type1: "grass",
+    type2: "water",
+    locations: [
+      { locationId: "hidden-coast-2", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-coast-3", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-coast-4", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-coast-5", levelRange: null, timeOfDay: "Both" },
+    ],
+    traits: ["bond"],
+    skills: ["water-ball", "leaf-spread"],
+    drops: ["small-slime-fragment", "aqua-melon-tentacle"],
+    synthesis: null
+  },
+  {
+    id: 44,
+    name: "Rotten Melon",
+    dataStatus: "pending",
+    type1: "grass",
+    type2: "poison",
+    locations: [
+      { locationId: "hidden-coast-5", levelRange: null, timeOfDay: "Night" },
+    ],
+    traits: ["bond"],
+    skills: ["poison-ball", "leaf-boomerang", "leaf-spread"],
+    drops: ["small-slime-fragment", "rotten-melon-tentacle"],
+    synthesis: null
+  },
+  {
+    id: 45,
+    name: "Ice Melon",
+    dataStatus: "pending", 
+    type1: "grass",
+    type2: "ice",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+    synthesis: null
+  },
+  {
+    id: 46,
+    name: "Slick",
+    dataStatus: "pending",
+    type1: "water",
+    type2: "power",
+    locations: null,
+    traits: ["swimming"],
+    skills: ["water-ball", "aqua-heal", "power-swing", "force-dash", "power-upper"],
+    drops: ["small-slime-fragment", "slick-vent"],
+    synthesis: null
+  },
+  {
+    id: 47,
+    name: "Lightning Slick",
+    dataStatus: "pending",
+    type1: "water",
+    type2: "electric",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+    synthesis: null
+  },
+  {
+    id: 48,
+    name: "Hornet",
+    dataStatus: "pending",
+    type1: "wind",
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+    synthesis: null
+  },
+  {
+    id: 49,
+    name: "Poison Hornet",
+    dataStatus: "pending",
+    type1: "wind",
+    type2: "poison",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+    synthesis: null
+  },
+  {
+    id: 50,
+    name: "Bolt Hornet",
+    dataStatus: "pending",
+    type1: "wind",
+    type2: "electric",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+    synthesis: null
+  },
   { id: 51, name: null, dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
   { id: 52, name: "Stella", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },
   { id: 53, name: "Shade", dataStatus: "pending", type1: null, type2: null, locations: null, traits: null, skills: null, drops: ["small-slime-fragment"], synthesis: null },

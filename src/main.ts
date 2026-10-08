@@ -60,7 +60,8 @@ app.innerHTML = `
         <span class="brand-name">slimepedia<span>.</span></span>
       </a>
       <nav class="topnav" aria-label="Navegação principal">
-        <a class="topnav-link is-active" href="#slimes">Slimes</a>
+        <a class="topnav-link is-active" href="#slimes">Slimepedia</a>
+        <a class="topnav-link" href="#sinteses">Sínteses</a>
         <a class="topnav-link" href="#sobre">Sobre o projeto</a>
       </nav>
       <span class="game-label"><span class="status-dot"></span> WORLD OF SLIMES</span>
@@ -218,8 +219,8 @@ function renderDetailLocations(slime: Slime): string {
       throw new Error(`Local não cadastrado: ${locationId}`);
     }
     const level = levelRange ? `Level ${levelRange.min}-${levelRange.max}` : "Level não informado";
-    const time = timeOfDay === "Both" ? "Day · Night" : timeOfDay;
-    return `<li><strong>${escapeHtml(location.name)}</strong><span class="detail-meta">${level} · ${escapeHtml(time)}</span></li>`;
+    const timeIcons = `${timeOfDay !== "Night" ? '<span class="location-time-icon" role="img" aria-label="Day" title="Day">☀</span>' : ""}${timeOfDay !== "Day" ? '<span class="location-time-icon" role="img" aria-label="Night" title="Night">☾</span>' : ""}`;
+    return `<li><strong>${escapeHtml(location.name)}${timeIcons}</strong><span class="detail-meta">${level}</span></li>`;
   }).join("")}</ul>`;
 }
 
@@ -253,9 +254,15 @@ function renderDetailSkills(slime: Slime): string {
     if (!skill) {
       throw new Error(`Skill não cadastrada: ${skillId}`);
     }
-    const mp = skill.mpCost === null ? "—" : String(skill.mpCost);
-    const cooldown = skill.cooldown === null ? "—" : String(skill.cooldown);
-    const damage = skill.damage === null ? "—" : String(skill.damage);
+    const formatRange = ({ min, max }: { min: number | null; max: number | null }) => {
+      if (min === null && max === null) {
+        return "—";
+      }
+      return `${min ?? "—"}–${max ?? "—"}`;
+    };
+    const mp = formatRange(skill.mpCost);
+    const cooldown = formatRange(skill.cooldown);
+    const damage = formatRange(skill.damage);
     return `<li><strong>${escapeHtml(skill.name)}</strong><span class="detail-meta">MP ${escapeHtml(mp)} · CD ${escapeHtml(cooldown)} · Dano ${escapeHtml(damage)}</span></li>`;
   }).join("")}</ul>`;
 }

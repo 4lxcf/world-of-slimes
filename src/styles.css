@@ -735,6 +735,11 @@ tbody tr:hover {
   font-size: 11px;
 }
 
+.location-time-icon {
+  margin-left: 5px;
+  font-size: 12px;
+}
+
 .detail-meta {
   display: block;
   margin-top: 4px;

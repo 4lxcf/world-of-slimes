@@ -21,6 +21,13 @@ export const locations = [
   { id: "nepenthes-forest", name: "Nepenthes Forest" },
   { id: "beneath-black-cliff", name: "Beneath the Black Cliff" },
   { id: "dark-dawn-valley", name: "Dark Dawn Valley" },
+  { id: "forgotten-glade", name: "Forgotten Glade" },
+  { id: "gloomy-crossroads", name: "Gloomy Crossroads" },
+  { id: "hidden-coast-1", name: "Hidden Coast 1" },
+  { id: "hidden-coast-2", name: "Hidden Coast 2" },
+  { id: "hidden-coast-3", name: "Hidden Coast 3" },
+  { id: "hidden-coast-4", name: "Hidden Coast 4" },
+  { id: "hidden-coast-5", name: "Hidden Coast 5" },
 ] as const;
 
 export type LocationId = (typeof locations)[number]["id"];
