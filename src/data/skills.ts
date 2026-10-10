@@ -17,6 +17,7 @@ export const skills = [
   { id: "aqua-heal", name: "Aqua Heal", type: "heal", mpCost: { min: 48, max: 48 }, cooldown: { min: 11.8, max: 11.8 }, damage: { min: 54, max: 54 } },
   { id: "force-dash", name: "Force Dash", type: "physical", mpCost: { min: 31, max: 31 }, cooldown: { min: 7.9, max: 7.9 }, damage: { min: 57, max: 57 } },
   { id: "power-upper", name: "Power Upper", type: "physical", mpCost: { min: 33, max: 33 }, cooldown: { min: 11.2, max: 11.2 }, damage: { min: 77, max: 77 } },
+  { id: "stone-shot", name: "Power Upper", type: "physical", mpCost: { min: null, max: null }, cooldown: { min: null, max: null }, damage: { min: null, max: null } },
 ] as const;
 
 export type SkillId = (typeof skills)[number]["id"];

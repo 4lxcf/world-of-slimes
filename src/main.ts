@@ -45,6 +45,28 @@ function renderKnownList(items: string[] | null | undefined): string {
     : renderList(items);
 }
 
+function hasKnownSlimeIdentity(slime: Pick<Slime, "name" | "type1" | "type2">): boolean {
+  return typeof slime.name === "string" && slime.name.trim().length > 0 && (slime.type1 !== null || slime.type2 !== null);
+}
+
+function getTraitStatusText(slime: Pick<Slime, "name" | "type1" | "type2">): string {
+  return hasKnownSlimeIdentity(slime) ? "—" : "A catalogar";
+}
+
+function renderTraitCell(slime: Slime): string {
+  if (slime.traits === null || slime.traits === undefined || slime.traits.length === 0) {
+    return `<span class="type-empty">${escapeHtml(getTraitStatusText(slime))}</span>`;
+  }
+
+  return renderKnownList(slime.traits.map((traitId) => {
+    const name = traitNames.get(traitId);
+    if (!name) {
+      throw new Error(`Trait não cadastrada: ${traitId}`);
+    }
+    return name;
+  }));
+}
+
 const slimesById = new Map(slimes.map((slime) => [slime.id, slime]));
 const itemsById = new Map(items.map((item) => [item.id, item]));
 const locationsById = new Map(locations.map((location) => [location.id, location]));
@@ -225,11 +247,11 @@ function renderDetailLocations(slime: Slime): string {
 }
 
 function renderDetailTraits(slime: Slime): string {
-  if (slime.traits === null) {
-    return '<p class="detail-unknown">A catalogar</p>';
+  if (slime.traits === null || slime.traits === undefined) {
+    return `<p class="detail-unknown">${escapeHtml(getTraitStatusText(slime))}</p>`;
   }
   if (slime.traits.length === 0) {
-    return '<p class="detail-unknown">Nenhuma Trait registrada</p>';
+    return `<p class="detail-unknown">${escapeHtml(getTraitStatusText(slime))}</p>`;
   }
 
   return `<ul class="detail-list">${slime.traits.map((traitId) => {
@@ -396,13 +418,7 @@ function renderSlimes(): void {
           </td>
           <td>${slime.type1 ? `<span class="type-tag type-tag-${escapeHtml(slime.type1)}"><i></i>${escapeHtml(getTypeName(slime.type1))}</span>` : '<span class="type-empty">A catalogar</span>'}</td>
           <td>${slime.type2 ? `<span class="type-tag type-tag-${escapeHtml(slime.type2)}"><i></i>${escapeHtml(getTypeName(slime.type2))}</span>` : '<span class="type-empty">—</span>'}</td>
-          <td class="detail-cell">${renderKnownList(slime.traits?.map((traitId) => {
-            const name = traitNames.get(traitId);
-            if (!name) {
-              throw new Error(`Trait não cadastrada: ${traitId}`);
-            }
-            return name;
-          }))}</td>
+          <td class="detail-cell">${renderTraitCell(slime)}</td>
         </tr>
       `,
     )
