@@ -84,6 +84,7 @@ app.innerHTML = `
       <nav class="topnav" aria-label="Navegação principal">
         <a class="topnav-link is-active" href="#slimes">Slimepedia</a>
         <a class="topnav-link" href="#sinteses">Sínteses</a>
+        <a class="topnav-link" href="#spawn-tracker">Spawn Tracker</a>
         <a class="topnav-link" href="#sobre">Sobre o projeto</a>
       </nav>
       <span class="game-label"><span class="status-dot"></span> WORLD OF SLIMES</span>

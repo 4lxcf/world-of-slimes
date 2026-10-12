@@ -206,11 +206,18 @@ export const items = [
       "A basic Cube made for taming slimes. Anyone can obtain it easily.",
   },
   {
+    id: "rare-cube",
+    name: "Rare Cube",
+    type: "Consumable",
+    description:
+      "A Rare Cube made for taming slimes. Higher tame rate than the Cube.",
+  },
+  {
     id: "legendary-cube",
     name: "Legendary Cube",
     type: "Consumable",
     description:
-      "A legendary Cube made for taming slimes. It can easily tame most slimes.",
+      "A Legendary Cube made for taming slimes. It can easily tame most slimes.",
   },
   {
     id: "30-hp-potion",
@@ -218,6 +225,13 @@ export const items = [
     type: "Consumable",
     description:
       "A potion that restores a small amount of a slime's health. Restores 30 HP to the equipped slime.",
+  },
+  {
+    id: "150-hp-potion",
+    name: "150 HP Potion",
+    type: "Consumable",
+    description:
+      "A potion that restores a fair amount of a slime's health. Restores 150 HP to the equipped slime.",
   },
   {
     id: "stamina-recovery-potion",
@@ -232,6 +246,13 @@ export const items = [
     type: "Consumable",
     description:
       "A scroll that lets you instantly travel to Larus Village by mysterious power when torn. The Larus Village mark is inscribed on blue paper. It can only be used near the village.",
+  },
+  {
+    id: "noecheon-scroll",
+    name: "Noecheon Warp Scroll",
+    type: "Consumable",
+    description:
+      "A scroll that lets you instantly travel to Noecheon.",
   },
   {
     id: "xp-boost",
@@ -253,6 +274,13 @@ export const items = [
     type: "Consumable",
     description:
       "Ordinary slime feed, easily found anywhere. It can be given to a hungry slime.",
+  },
+  {
+    id: "friendly-tweety-egg",
+    name: "Friendly Tweety Egg",
+    type: "Consumable",
+    description:
+      "A Tweety egg. Opening it yields a Friendly Tweety, already bonded and trusting from the start.",
   },
 ] as const;
 

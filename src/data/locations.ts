@@ -30,6 +30,23 @@ export const locations = [
   { id: "hidden-coast-4", name: "Hidden Coast 4" },
   { id: "hidden-coast-5", name: "Hidden Coast 5" },
   { id: "starry-beach", name: "Starry Beach" },
+  { id: "noecheon-mountain-1", name: "Noecheon Mountain 1" },
+  { id: "noecheon-mountain-2", name: "Noecheon Mountain 2" },
+  { id: "noecheon-mountain-3", name: "Noecheon Mountain 3" },
+  { id: "noecheon-mountain-4", name: "Noecheon Mountain 4" },
+  { id: "noecheon-mountain-5", name: "Noecheon Mountain 5" },
+  { id: "noecheon-mountain-6", name: "Noecheon Mountain 6" },
+  { id: "noecheon-mountain-7", name: "Noecheon Mountain 7" },
+  { id: "snowfield-passage", name: "Snowfield Passage" },
+  { id: "neocheon-back-road-1", name: "Noecheon Back Road 1" },
+  { id: "neocheon-back-road-2", name: "Noecheon Back Road 2" },
+  { id: "neocheon-north-entrance", name: "Noecheon North Entrance" },
+  { id: "neocheon-village", name: "Noecheon Village" },
+  { id: "neocheon-south-entrance", name: "Noecheon South Entrance" },
+  { id: "neocheon-mountain-trail-1", name: "Noecheon Mountain Trail 1" },
+  { id: "neocheon-mountain-trail-2", name: "Noecheon Mountain Trail 2" },
+  { id: "neocheon-mountain-trail-3", name: "Noecheon Mountain Trail 3" },
+  { id: "neocheon-mountain-trail-4", name: "Noecheon Mountain Trail 4" },
 ] as const;
 
 export type LocationId = (typeof locations)[number]["id"];
