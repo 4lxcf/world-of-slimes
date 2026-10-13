@@ -2,60 +2,70 @@ import type { ItemId } from "./items";
 
 export type SynthesisRecipe = {
   id: string;
-  slimeIds: [number, number];
+  /** Slime whose level determines the synthesis range. */
+  mainSlimeId: number;
+  /** Sub slime consumed by synthesis; its level must be lower than the main slime's. */
+  subSlimeId: number;
   requiredLevel: number | null;
-  requiredItems: ItemId[] | null;
+  ingredients: [] | [ItemId] | null;
   resultSlimeId: number;
 };
 
 export const syntheses: SynthesisRecipe[] = [
   {
     id: "shell-tweety",
-    slimeIds: [16, 26],
+    mainSlimeId: 16,
+    subSlimeId: 26,
     requiredLevel: 10,
-    requiredItems: [],
+    ingredients: [],
     resultSlimeId: 18,
   },
   {
     id: "icy-wisp",
-    slimeIds: [19, 36],
+    mainSlimeId: 19,
+    subSlimeId: 36,
     requiredLevel: 19,
-    requiredItems: [],
+    ingredients: [],
     resultSlimeId: 20,
   },
   {
     id: "mighty-wisp",
-    slimeIds: [19, 36],
+    mainSlimeId: 19,
+    subSlimeId: 36,
     requiredLevel: 19,
-    requiredItems: [],
+    ingredients: [],
     resultSlimeId: 20,
   },
   {
     id: "firespirit-icy",
-    slimeIds: [19, 36],
+    mainSlimeId: 19,
+    subSlimeId: 36,
     requiredLevel: 16,
-    requiredItems: [],
+    ingredients: [],
     resultSlimeId: 23,
   },
   {
     id: "prince-icy",
-    slimeIds: [24, 36],
+    mainSlimeId: 24,
+    subSlimeId: 36,
     requiredLevel: 16,
-    requiredItems: ["fire-spirits-mist"],
+    ingredients: ["fire-spirits-mist"],
     resultSlimeId: 23,
   },
   {
     id: "bass-poisonbass",
-    slimeIds: [31, 32],
+    mainSlimeId: 31,
+    subSlimeId: 32,
     requiredLevel: 10,
-    requiredItems: ["princes-orb"],
+    ingredients: ["princes-orb"],
     resultSlimeId: 25,
   },
   {
     id: "bass-poisonmandrake",
-    slimeIds: [31, 29],
+    mainSlimeId: 31,
+    subSlimeId: 29,
     requiredLevel: 10,
-    requiredItems: ["poison-princes-orb"],
+    ingredients: ["poison-princes-orb"],
     resultSlimeId: 25,
   },
 ];

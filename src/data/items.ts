@@ -56,6 +56,12 @@ export const items = [
       "A thin hide that wrapped Tricky's body. It's very dark color.",
   },
   {
+    id: "icy-hide",
+    name: "Icy's Hide",
+    type: "Byproduct",
+    description: null,
+  },
+  {
     id: "small-slime-fragment",
     name: "Small Slime Fragment",
     type: "Byproduct",
@@ -117,7 +123,7 @@ export const items = [
     id: "lizard-scale",
     name: "Lizard's Scale",
     type: "Byproduct",
-    description: null,
+    description: "Fine scales that covered Lizard's body. Translucent reddish-brown and softer than they look.",
   },
   {
     id: "poison-lizard-scale",
@@ -129,7 +135,7 @@ export const items = [
     id: "electric-lizard-scale",
     name: "Electric Lizard's Scale",
     type: "Byproduct",
-    description: null,
+    description: "Fine scales that covered Electric Lizard's body. They hold a faint charge.",
   },
   {
     id: "wicked-membrane",
@@ -197,6 +203,36 @@ export const items = [
     name: "Infespor's Devil Wing",
     type: "Byproduct",
     description: null,
+  },
+  {
+    id: "poison-hornet-insect-wing",
+    name: "Poison Hornet's Insect Wing",
+    type: "Byproduct",
+    description: "An insect wing on Poison Hornet's back. The powder on the wing is extremely toxic.",
+  },
+  {
+    id: "volt-hornet-insect-wing",
+    name: "Volt Hornet's Insect Wing",
+    type: "Byproduct",
+    description: "An insect wing on Volt Hornet's back. Tinged yellow by the electricity flowing from Volt Hornet's body. It repels water and oil, useful in many ways.",
+  },
+  {
+    id: "fluffy-feather",
+    name: "Fluffy's Feather",
+    type: "Byproduct",
+    description: "A feather that was on Fluffy's head. Very light and soft.",
+  },
+  {
+    id: "dandelion-orb",
+    name: "Dandelion's Orb",
+    type: "Byproduct",
+    description: "A round orb rising from Dandelion's head. On a deep green base, it's decorated with teal patterns and glos faintly.",
+  },
+  {
+    id: "hornet-insect-wing",
+    name: "Hornet's Insect Wing",
+    type: "Byproduct",
+    description: "A round orb rising from Dandelion's head. On a deep green base, it's decorated with teal patterns and glos faintly.",
   },
   {
     id: "cube",
@@ -273,7 +309,7 @@ export const items = [
     name: "Slime Feed",
     type: "Consumable",
     description:
-      "Ordinary slime feed, easily found anywhere. It can be given to a hungry slime.",
+      "Ordinary slime feed, easily found anywhere. It can be given to a hungry slime. Fills 500 hunger and restores 170 Stamina.",
   },
   {
     id: "friendly-tweety-egg",
