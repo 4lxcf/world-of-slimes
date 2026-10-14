@@ -235,6 +235,24 @@ export const items = [
     description: "A round orb rising from Dandelion's head. On a deep green base, it's decorated with teal patterns and glos faintly.",
   },
   {
+    id: "fried-feather",
+    name: "Fried's Feather",
+    type: "Byproduct",
+    description: "Fried's tail feather. Despite its voluminous look, it's a single feather with a thick, hard shaft inside.",
+  },
+  {
+    id: "mole-sharp-blade",
+    name: "Mole's Sharp Blade",
+    type: "Byproduct",
+    description: "A sharp blade on Mole's hand. Very sharp metal, specialized for digging.",
+  },
+  {
+    id: "vesper-demon-wing",
+    name: "Vesper's Demon Wing",
+    type: "Byproduct",
+    description: "Vesper's demon wing, used for flight. Small but thick and hard. Its surface is smooth and glossy.",
+  },
+  {
     id: "cube",
     name: "Cube",
     type: "Consumable",
