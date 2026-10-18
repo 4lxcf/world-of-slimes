@@ -60,6 +60,7 @@ export const slimeImages: Readonly<Partial<Record<number, string>>> = {
   105: "/images/slimes/105.png",
   107: "/images/slimes/107.png",
   108: "/images/slimes/108.png",
+  115: "/images/slimes/115.png",
   158: "/images/slimes/158.png",
   173: "/images/slimes/173.png",
   174: "/images/slimes/174.png",
