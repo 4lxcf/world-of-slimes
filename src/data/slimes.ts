@@ -1585,14 +1585,14 @@ export const slimes: Slime[] = [
   },
   {
     id: 115,
-    name: null,
+    name: "Spooky",
     dataStatus: "pending",
-    type1: null,
+    type1: "magic",
     type2: null,
     locations: null,
-    traits: null,
+    traits: ["flight"],
     skills: null,
-    drops: ["small-slime-fragment"],
+    drops: null,
     synthesis: null,
   },
   {

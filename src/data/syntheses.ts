@@ -169,6 +169,7 @@ const synthesisRows: SynthesisRow[] = [
   ["community-150", 105, 31, 68, 70, ["dandelion-orb"]],
   ["community-151", 107, 31, 63, 62, ["kobolds-crystal"]],
   ["community-152", 108, 31, 61, 70, ["wisp-sigil", "thunder-wisp-sigil", "stella-sigil"]],
+  ["community-153", 115, 31, 57, 63, []],
   ["prince-icy", 23, 16, 24, 36, ["fire-spirits-mist"]],
 ];
 
