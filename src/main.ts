@@ -1,4 +1,5 @@
 import { slimes, type Slime } from "./data/slimes";
+import { slimeImages } from "./data/slime-images";
 import { items, type ItemId } from "./data/items";
 import { locations } from "./data/locations";
 import { skills } from "./data/skills";
@@ -200,8 +201,8 @@ const sectionScreen = getRequiredElement<HTMLElement>("#section-screen");
 let selectedMapLocationId: string = locations[0]?.id ?? "";
 let selectedSynthesisItem: ItemId | null = null;
 
-const SYNTHESIS_LEVEL_MIN = 7;
-const SYNTHESIS_LEVEL_MAX = 21;
+const SYNTHESIS_LEVEL_MIN = 4;
+const SYNTHESIS_LEVEL_MAX = 31;
 const SYNTHESIS_LEVELS_PER_RANGE = 3;
 
 function getSynthesisLevelRange(level: number): { min: number; max: number } | null {
@@ -224,6 +225,32 @@ function formatSynthesisLevel(level: number | null): string {
   return range
     ? `Lv. ${range.min}–${range.max}`
     : `Level ${level} fora do intervalo disponível`;
+}
+
+function getSynthesisIngredientsLabel(ingredientIds: ItemId[] | null): string {
+  if (ingredientIds === null) {
+    return "Ingredients not confirmed";
+  }
+  if (ingredientIds.length === 0) {
+    return "No ingredients";
+  }
+  const ingredientNames = ingredientIds.map((itemId) => {
+    const item = itemsById.get(itemId);
+    if (!item) {
+      throw new Error(`Item não cadastrado na receita: ${itemId}`);
+    }
+    return item.name;
+  });
+  return ingredientNames.length === 1
+    ? ingredientNames[0]
+    : `Any one of: ${ingredientNames.join(", ")}`;
+}
+
+function formatRecipeLevel(recipe: (typeof syntheses)[number]): string {
+  if (recipe.levelQualifier === "maximum" && recipe.requiredLevel !== null) {
+    return `≤ Lv. ${recipe.requiredLevel}`;
+  }
+  return formatSynthesisLevel(recipe.requiredLevel);
 }
 
 function isSortKey(value: string): value is SortKey {
@@ -277,21 +304,18 @@ function renderDetailLocations(slime: Slime): string {
   }).join("")}</ul>`;
 }
 
-function renderDetailTraits(slime: Slime): string {
-  if (slime.traits === null || slime.traits === undefined) {
-    return `<p class="detail-unknown">${escapeHtml(getTraitStatusText(slime))}</p>`;
-  }
-  if (slime.traits.length === 0) {
-    return `<p class="detail-unknown">${escapeHtml(getTraitStatusText(slime))}</p>`;
+function renderSummaryTraits(slime: Slime): string {
+  if (slime.traits === null || slime.traits === undefined || slime.traits.length === 0) {
+    return `<span class="detail-unknown">${escapeHtml(getTraitStatusText(slime))}</span>`;
   }
 
-  return `<ul class="detail-list">${slime.traits.map((traitId) => {
+  return `<div class="summary-traits">${slime.traits.map((traitId) => {
     const trait = traits.find(({ id }) => id === traitId);
     if (!trait) {
       throw new Error(`Trait não cadastrada: ${traitId}`);
     }
-    return `<li><strong>${escapeHtml(trait.name)}</strong><span class="detail-meta">${escapeHtml(trait.description)}</span></li>`;
-  }).join("")}</ul>`;
+    return `<span class="summary-trait" title="${escapeHtml(trait.description)}">${escapeHtml(trait.name)}</span>`;
+  }).join("")}</div>`;
 }
 
 function renderDetailSkills(slime: Slime): string {
@@ -346,21 +370,38 @@ function renderDetailSynthesis(slime: Slime): string {
   );
 
   if (recipes.length > 0) {
-    return `<ul class="detail-list">${recipes.map((recipe) => {
-      const level = formatSynthesisLevel(recipe.requiredLevel);
-      const ingredients = recipe.ingredients === null
-        ? "Ingredients not confirmed"
-        : recipe.ingredients.length === 0
-          ? "No ingredients"
-          : recipe.ingredients.map((itemId) => {
-              const item = itemsById.get(itemId);
-              if (!item) {
-                throw new Error(`Item não cadastrado na receita "${recipe.id}": ${itemId}`);
-              }
-              return item.name;
-            }).map(escapeHtml).join(", ");
-      return `<li>${renderSlimeLink(recipe.mainSlimeId)} <span class="detail-meta">Main slime · ${level}</span> + ${renderSlimeLink(recipe.subSlimeId)} <span class="detail-meta">Sub slime · ${escapeHtml(ingredients)} → ${renderSlimeLink(recipe.resultSlimeId)}</span></li>`;
-    }).join("")}</ul>`;
+    const renderRecipeSlime = (slimeId: number, role: string) => {
+      const recipeSlime = slimesById.get(slimeId);
+      if (!recipeSlime) {
+        throw new Error(`Síntese referencia slime inexistente: #${slimeId}`);
+      }
+      const name = recipeSlime.name ?? `Slime #${String(slimeId).padStart(3, "0")}`;
+      return `<div class="synthesis-part">
+        ${renderSlimeAvatar(recipeSlime, "detail-synthesis-avatar")}
+        <span class="synthesis-part-role">${role}</span>
+        <a class="synthesis-part-name" href="#slime/${slimeId}">${escapeHtml(name)}</a>
+        <span class="synthesis-part-id">#${String(slimeId).padStart(3, "0")}</span>
+      </div>`;
+    };
+
+    return `<p class="synthesis-intro">Combinações conhecidas para ${escapeHtml(slime.name ?? `Slime #${String(slime.id).padStart(3, "0")}`)}.</p>
+      <div class="detail-synthesis-list">${recipes.map((recipe) => {
+        const level = formatRecipeLevel(recipe);
+        const ingredients = getSynthesisIngredientsLabel(recipe.ingredients);
+        return `<article class="detail-synthesis-recipe">
+          <div class="synthesis-flow">
+            ${renderRecipeSlime(recipe.mainSlimeId, "MAIN SLIME")}
+            <span class="synthesis-operator synthesis-plus" aria-label="mais">+</span>
+            ${renderRecipeSlime(recipe.subSlimeId, "SUB SLIME")}
+            <span class="synthesis-operator synthesis-arrow" aria-label="produz">→</span>
+            ${renderRecipeSlime(recipe.resultSlimeId, "RESULTADO")}
+          </div>
+          <div class="synthesis-recipe-meta">
+            <span class="synthesis-meta-item"><span>LEVEL</span><strong>${escapeHtml(level)}</strong></span>
+            <span class="synthesis-meta-item synthesis-ingredient"><span>INGREDIENTE</span><strong>${escapeHtml(ingredients)}</strong></span>
+          </div>
+        </article>`;
+      }).join("")}</div>`;
   }
 
   if (slime.synthesis === "unavailable") {
@@ -377,23 +418,53 @@ function renderSlimeDetails(slime: Slime): void {
     .filter((type): type is SlimeTypeId => type !== null)
     .map((type) => `<span class="type-tag type-tag-${escapeHtml(type)}"><i></i>${escapeHtml(getTypeName(type))}</span>`)
     .join("");
+  const locationsLabel = slime.locations === null
+    ? "A catalogar"
+    : slime.locations.length === 0
+      ? "Nenhuma registrada"
+      : `${slime.locations.length} ${slime.locations.length === 1 ? "localização" : "localizações"}`;
+  const recipes = syntheses.filter(
+    ({ mainSlimeId, subSlimeId, resultSlimeId }) =>
+      mainSlimeId === slime.id || subSlimeId === slime.id || resultSlimeId === slime.id,
+  );
+  const synthesisLabel = recipes.length > 0
+    ? `${recipes.length} ${recipes.length === 1 ? "receita" : "receitas"}`
+    : slime.synthesis === "unavailable"
+      ? "Não disponível"
+      : slime.synthesis === "unknown"
+        ? "Não verificada"
+        : "A catalogar";
 
   detailScreen.innerHTML = `
     <a class="back-link" href="#slimes"><span aria-hidden="true">←</span> Voltar à Slimepedia</a>
-    <section class="slime-detail-header">
-      <span class="slime-avatar detail-avatar${slime.type1 ? ` type-${escapeHtml(slime.type1)}` : ""}" aria-hidden="true"><i></i><b></b></span>
-      <div>
-        <p class="eyebrow"><span class="eyebrow-line"></span> SLIME #${String(slime.id).padStart(3, "0")}</p>
-        <h1 class="detail-title">${escapeHtml(slime.name ?? "Nome a confirmar")}</h1>
-        <div class="detail-types">${types || '<span class="detail-unknown">Tipos a catalogar</span>'}</div>
+    <section class="slime-detail-layout">
+      <div class="slime-detail-art">
+        <span class="detail-art-number">#${String(slime.id).padStart(3, "0")}</span>
+        ${renderSlimeAvatar(slime, "detail-avatar")}
+        <span class="detail-art-caption">WORLD OF SLIMES</span>
+      </div>
+      <div class="slime-detail-info">
+        <header class="slime-detail-heading">
+          <p class="eyebrow"><span class="eyebrow-line"></span> GUIA DA COMUNIDADE · SLIME #${String(slime.id).padStart(3, "0")}</p>
+          <h1 class="detail-title">${escapeHtml(slime.name ?? "Nome a confirmar")}</h1>
+        </header>
+        <table class="slime-summary-table">
+          <tbody>
+            <tr><th scope="row">ID</th><td>#${String(slime.id).padStart(3, "0")}</td></tr>
+            <tr><th scope="row">Tipo</th><td><div class="detail-types">${types || '<span class="detail-unknown">A catalogar</span>'}</div></td></tr>
+            <tr><th scope="row">Traits</th><td>${renderSummaryTraits(slime)}</td></tr>
+            <tr><th scope="row">Localizações</th><td>${escapeHtml(locationsLabel)}</td></tr>
+            <tr><th scope="row">Sínteses</th><td>${escapeHtml(synthesisLabel)}</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
     <div class="detail-grid">
-      <section class="detail-card"><h2>Localizações</h2>${renderDetailLocations(slime)}</section>
-      <section class="detail-card"><h2>Traits</h2>${renderDetailTraits(slime)}</section>
-      <section class="detail-card"><h2>Skills</h2>${renderDetailSkills(slime)}</section>
+      <section class="detail-card detail-stats-card"><h2>Stats</h2><p class="detail-unknown">Stats ainda não catalogados.</p></section>
       <section class="detail-card"><h2>Drops</h2>${renderDetailItems(slime)}</section>
       <section class="detail-card detail-card-wide"><h2>Sínteses</h2>${renderDetailSynthesis(slime)}</section>
+      <section class="detail-card"><h2>Localizações</h2>${renderDetailLocations(slime)}</section>
+      <section class="detail-card"><h2>Skills</h2>${renderDetailSkills(slime)}</section>
     </div>
   `;
 }
@@ -404,7 +475,12 @@ function getSlimeLabel(slime: Slime): string {
 
 function renderSlimeAvatar(slime: Slime, className = ""): string {
   const typeClass = slime.type1 ? ` type-${escapeHtml(slime.type1)}` : "";
-  return `<span class="slime-avatar${typeClass}${className ? ` ${className}` : ""}" aria-hidden="true"><i></i><b></b></span>`;
+  const imagePath = slimeImages[slime.id];
+  const imageClass = imagePath ? " has-image" : "";
+  const content = imagePath
+    ? `<img src="${imagePath}" alt="" decoding="async">`
+    : "<i></i><b></b>";
+  return `<span class="slime-avatar${typeClass}${imageClass}${className ? ` ${className}` : ""}" aria-hidden="true">${content}</span>`;
 }
 
 function renderSlimePickerOptions(query = ""): string {
@@ -429,18 +505,8 @@ function renderKnownSyntheses(): string {
   }
 
   return syntheses.map((recipe) => {
-    const level = formatSynthesisLevel(recipe.requiredLevel);
-    const itemNames = recipe.ingredients === null
-      ? "Ingredients not confirmed"
-      : recipe.ingredients.length === 0
-        ? "No ingredients"
-        : recipe.ingredients.map((itemId) => {
-            const item = itemsById.get(itemId);
-            if (!item) {
-              throw new Error(`Item não cadastrado na receita "${recipe.id}": ${itemId}`);
-            }
-            return escapeHtml(item.name);
-          }).join(", ");
+    const level = formatRecipeLevel(recipe);
+    const itemNames = escapeHtml(getSynthesisIngredientsLabel(recipe.ingredients));
     return `
       <article class="recipe-card">
         <div class="recipe-combination">
@@ -488,10 +554,11 @@ function renderSynthesisResults(): void {
     const subEligible = subSlimeId === null || recipe.subSlimeId === subSlimeId;
     const recipeRange = recipe.requiredLevel === null ? null : getSynthesisLevelRange(recipe.requiredLevel);
     const levelEligible = selectedRange === null || recipe.requiredLevel === null ||
+      recipe.levelQualifier === "maximum" ||
       (recipeRange !== null && recipeRange.min === selectedRange.min && recipeRange.max === selectedRange.max);
     const itemsEligible = selectedSynthesisItem === null ||
       recipe.ingredients === null ||
-      (recipe.ingredients.length === 1 && recipe.ingredients[0] === selectedSynthesisItem);
+      recipe.ingredients.includes(selectedSynthesisItem);
     return mainEligible && subEligible && levelEligible && itemsEligible;
   });
 
@@ -513,19 +580,9 @@ function renderSynthesisResults(): void {
       if (!mainSlime || !subSlime) {
         throw new Error(`Síntese "${recipe.id}" referencia slimes inexistentes.`);
       }
-      const levelNote = formatSynthesisLevel(recipe.requiredLevel);
+      const levelNote = formatRecipeLevel(recipe);
       const mainLevelNote = level === null ? "Level do Main slime não informado" : `Main slime Lv. ${level}`;
-      const itemNote = recipe.ingredients === null
-        ? "Ingredients not confirmed"
-        : recipe.ingredients.length === 0
-          ? "No ingredients"
-          : recipe.ingredients.map((itemId) => {
-              const item = itemsById.get(itemId);
-              if (!item) {
-                throw new Error(`Item não cadastrado na receita "${recipe.id}": ${itemId}`);
-              }
-              return escapeHtml(item.name);
-            }).join(", ");
+      const itemNote = escapeHtml(getSynthesisIngredientsLabel(recipe.ingredients));
       return `<article class="simulator-result">
         <div class="simulator-result-slime">${renderSlimeAvatar(resultSlime, "simulator-avatar")}<div><a href="#slime/${resultSlime.id}">${escapeHtml(resultSlime.name ?? `Slime #${String(resultSlime.id).padStart(3, "0")}`)}</a><span class="simulator-result-number">#${String(resultSlime.id).padStart(3, "0")}</span></div></div>
         <div class="simulator-result-meta">
@@ -581,7 +638,7 @@ function renderSynthesisPage(): void {
           </div>
         </div>
         <span class="simulator-operator simulator-arrow" aria-hidden="true">→</span>
-        <label class="field-label level-field">Main slime level<input id="synthesis-level" type="number" min="${SYNTHESIS_LEVEL_MIN}" max="${SYNTHESIS_LEVEL_MAX}" step="1" placeholder="7–21" /></label>
+        <label class="field-label level-field">Main slime level<input id="synthesis-level" type="number" min="${SYNTHESIS_LEVEL_MIN}" max="${SYNTHESIS_LEVEL_MAX}" step="1" placeholder="4–31" /></label>
         <label class="field-label item-slot" for="synthesis-item">Ingredients (optional)<select id="synthesis-item"><option value="">No ingredients</option>${itemOptions}</select></label>
         <button class="button-secondary simulator-reset" type="button" data-reset-synthesis>↺ Reset</button>
       </div>
@@ -878,9 +935,7 @@ function renderSlimes(): void {
           <td class="number-cell">#${String(slime.id).padStart(3, "0")}</td>
           <td>
             <div class="slime-name">
-              <span class="slime-avatar${slime.type1 ? ` type-${escapeHtml(slime.type1)}` : ""}" aria-hidden="true">
-                <i></i><b></b>
-              </span>
+              ${renderSlimeAvatar(slime)}
               <a class="slime-link" href="#slime/${slime.id}">${escapeHtml(slime.name ?? "Nome a confirmar")}</a>
             </div>
           </td>

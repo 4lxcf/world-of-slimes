@@ -36,6 +36,7 @@ export const slimes: Slime[] = [
       { locationId: "hidden-shore-1", levelRange: null, timeOfDay: "Both" },
       { locationId: "hidden-shore-2", levelRange: null, timeOfDay: "Both" },
       { locationId: "hidden-shore-3", levelRange: null, timeOfDay: "Both" },
+      { locationId: "spray-beach-ferry", levelRange: {min: 5, max: 7}, timeOfDay: "Both" },
     ],
     traits: null,
     skills: null,
@@ -63,6 +64,7 @@ export const slimes: Slime[] = [
       { locationId: "noecheon-mountain-trail-1", levelRange: {min: 15, max: 17}, timeOfDay: "Both" },
       { locationId: "noecheon-mountain-3", levelRange: {min: 11, max: 13}, timeOfDay: "Both" },
       { locationId: "noecheon-mountain-4", levelRange: {min: 12, max: 14}, timeOfDay: "Night" },
+      { locationId: "noecheon-mountain-5", levelRange: {min: 13, max: 15}, timeOfDay: "Both" },
     ],
     traits: null,
     skills: null,
@@ -119,7 +121,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 6,
-    name: null,
+    name: "Flamelime",
     dataStatus: "pending",
     type1: null,
     type2: null,
@@ -429,10 +431,12 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "water",
     type2: "power",
-    locations: null,
+    locations: [
+      { locationId: "spray-beach-ferry", levelRange: {min: 5, max: 6}, timeOfDay: "Both" },
+    ],
     traits: ["swimming", "shield"],
     skills: ["power-swing", "water-ball"],
-    drops: ["small-slime-fragment", "shells-solid-fragment"],
+    drops: ["small-slime-fragment", "shells-solid-fragment", "adamant-core-fragment", "dewy-core-fragment"],
     synthesis: null,
   },
   {
@@ -537,7 +541,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 33,
-    name: null,
+    name: "Mud Bass",
     dataStatus: "pending",
     type1: null,
     type2: null,
@@ -554,7 +558,7 @@ export const slimes: Slime[] = [
     type1: "magic",
     type2: "dark",
     locations: [
-      { locationId: "forgotten-glade", levelRange: null, timeOfDay: "Both" },
+      { locationId: "forgotten-clearing", levelRange: null, timeOfDay: "Both" },
     ],
     traits: ["luminescence"],
     skills: ["magic-orb"],
@@ -585,10 +589,14 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "light",
     type2: null,
-    locations: null,
+    locations: [
+      { locationId: "spray-beach-ferry", levelRange: null, timeOfDay: "Night" },
+      { locationId: "foam-hill", levelRange: {min: 7, max: 8}, timeOfDay: "Night" },
+      { locationId: "spray-beach-ferry", levelRange: {min: 7, max: 7}, timeOfDay: "Night" },
+    ],
     traits: ["flight", "luminescence"],
     skills: ["light-orb"],
-    drops: ["small-slime-fragment", "wisp-sigil"],
+    drops: ["small-slime-fragment", "wisp-sigil", "glowing-core-fragment"],
     synthesis: null,
   },
   {
@@ -652,7 +660,7 @@ export const slimes: Slime[] = [
     type1: "metal",
     type2: "dark",
     locations: [
-      { locationId: "forgotten-glade", levelRange: null, timeOfDay: "Both" },
+      { locationId: "forgotten-clearing", levelRange: null, timeOfDay: "Both" },
       { locationId: "gloomy-crossroads", levelRange: null, timeOfDay: "Both" },
     ],
     traits: ["flight"],
@@ -756,10 +764,11 @@ export const slimes: Slime[] = [
     type2: null,
     locations: [
       { locationId: "noecheon-mountain-4", levelRange: {min: 12, max: 13}, timeOfDay: "Night" },
+      { locationId: "noecheon-mountain-5", levelRange: {min: 13, max: 15}, timeOfDay: "Both" },
     ],
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment", "hornet-insect-wing"],
+    drops: ["small-slime-fragment", "hornet-insect-wing", "weightless-core-fragment"],
     synthesis: null,
   },
   {
@@ -1015,10 +1024,10 @@ export const slimes: Slime[] = [
   },
   {
     id: 68,
-    name: null,
+    name: "Tau",
     dataStatus: "pending",
-    type1: null,
-    type2: null,
+    type1: "power",
+    type2: "light",
     locations: null,
     traits: null,
     skills: null,
@@ -1327,7 +1336,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 94,
-    name: null,
+    name: "Landif",
     dataStatus: "pending",
     type1: null,
     type2: null,
@@ -1447,7 +1456,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 104,
-    name: null,
+    name: "Koi",
     dataStatus: "pending",
     type1: null,
     type2: null,
@@ -1459,7 +1468,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 105,
-    name: null,
+    name: "Jinx",
     dataStatus: "pending",
     type1: null,
     type2: null,
@@ -1483,7 +1492,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 107,
-    name: null,
+    name: "Raven",
     dataStatus: "pending",
     type1: null,
     type2: null,
@@ -1495,7 +1504,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 108,
-    name: null,
+    name: "Skull",
     dataStatus: "pending",
     type1: null,
     type2: null,

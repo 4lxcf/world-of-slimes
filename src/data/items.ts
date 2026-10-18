@@ -83,7 +83,7 @@ export const items = [
   },
   {
     id: "poison-princes-orb",
-    name: "Prince's Orb",
+    name: "Poison Prince's Orb",
     type: "Byproduct",
     description: null,
   },
@@ -251,6 +251,36 @@ export const items = [
     name: "Vesper's Demon Wing",
     type: "Byproduct",
     description: "Vesper's demon wing, used for flight. Small but thick and hard. Its surface is smooth and glossy.",
+  },
+  {
+    id: "hide",
+    name: "Hide",
+    type: "Byproduct",
+    description: null,
+  },
+  {
+    id: "scales",
+    name: "Scales",
+    type: "Byproduct",
+    description: null,
+  },
+  {
+    id: "monocular-tentacle",
+    name: "Monocular's Tentacle",
+    type: "Byproduct",
+    description: null,
+  },
+  {
+    id: "ladifs-ring",
+    name: "Ladif's Ring",
+    type: "Byproduct",
+    description: null,
+  },
+  {
+    id: "thunder-wisp-sigil",
+    name: "Thunder Wisp's Sigil",
+    type: "Byproduct",
+    description: null,
   },
   {
     id: "cube",
