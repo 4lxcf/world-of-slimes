@@ -50,7 +50,7 @@ export const slimes: Slime[] = [
     type1: "grass",
     type2: null,
     locations: [
-      { locationId: "shadow-forest-entrance", levelRange: null, timeOfDay: "Both" },
+      { locationId: "shadow-forest-entrance", levelRange: {min: 1, max: 2}, timeOfDay: "Both" },
       { locationId: "forest-path", levelRange: { min: 1, max: 3 }, timeOfDay: "Both" },
       { locationId: "misty-hill", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
       { locationId: "cool-pond", levelRange: null, timeOfDay: "Both" },
@@ -267,16 +267,13 @@ export const slimes: Slime[] = [
     type1: "wind",
     type2: null,
     locations: [
+      { locationId: "shadow-forest-entrance", levelRange: {min: 1, max: 2}, timeOfDay: "Both" },
       { locationId: "forest-path", levelRange: null, timeOfDay: "Both" },
-      {
-        locationId: "misty-hill",
-        levelRange: { min: 2, max: 4 },
-        timeOfDay: "Both",
-      },
+      { locationId: "misty-hill", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
     ],
     traits: ["mining"],
     skills: ["wind-ball"],
-    drops: ["tweety-hide", "small-slime-fragment"],
+    drops: ["tweety-hide", "small-slime-fragment", "parched-core-fragment"],
     synthesis: null,
   },
   {
@@ -436,7 +433,7 @@ export const slimes: Slime[] = [
     ],
     traits: ["swimming", "shield"],
     skills: ["power-swing", "water-ball"],
-    drops: ["small-slime-fragment", "shells-solid-fragment", "adamant-core-fragment", "dewy-core-fragment"],
+    drops: ["small-slime-fragment", "shell-solid-fragment", "adamant-core-fragment", "dewy-core-fragment"],
     synthesis: null,
   },
   {
@@ -476,7 +473,7 @@ export const slimes: Slime[] = [
     ],
     traits: ["bond"],
     skills: ["grass-shot", "leaf-spread", "grass-needle"],
-    drops: ["small-slime-fragment", "mandrakes-leaf", "verdant-core-fragment"],
+    drops: ["small-slime-fragment", "mandrake-leaf", "verdant-core-fragment"],
     synthesis: null,
   },
   {
@@ -857,7 +854,7 @@ export const slimes: Slime[] = [
     type2: "dark",
     locations: null,
     traits: ["mining"],
-    skills: ["poison-ball"],
+    skills: ["poison-ball", "dark-orb", "dark-swing"],
     drops: null,
     synthesis: null,
   },
@@ -977,7 +974,7 @@ export const slimes: Slime[] = [
     locations: [{ locationId: "cave-2", levelRange: null, timeOfDay: "Both" }],
     traits: ["flight"],
     skills: ["poison-ball"],
-    drops: ["small-slime-fragment", "infespor-devil-wing"],
+    drops: ["small-slime-fragment", "infesper-devil-wing"],
     synthesis: null,
   },
   {

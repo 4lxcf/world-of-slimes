@@ -88,13 +88,13 @@ export const items = [
     description: null,
   },
   {
-    id: "shells-solid-fragment",
+    id: "shell-solid-fragment",
     name: "Shell's Solid Fragment",
     type: "Byproduct",
-    description: null,
+    description: "A hard fragment making up Shell's shell. Its vivid blue stripes contrast with the orange base.",
   },
   {
-    id: "mandrakes-leaf",
+    id: "mandrake-leaf",
     name: "Mandrake's Leaf",
     type: "Byproduct",
     description:
@@ -111,7 +111,7 @@ export const items = [
     id: "bass-scale",
     name: "Bass's Scale",
     type: "Byproduct",
-    description: null,
+    description: "Short scales that covered Bass's body. Always moist, keeping them supple.",
   },
   {
     id: "poison-bass-scale",
@@ -154,7 +154,7 @@ export const items = [
     id: "wisp-sigil",
     name: "Wisp's Sigil",
     type: "Byproduct",
-    description: null,
+    description: "A sigil engraved on Wisp's body. Cross-shaped. It gives off a faint glow.",
   },
   {
     id: "rusty-sharp-blade",
@@ -184,7 +184,7 @@ export const items = [
     id: "slick-vent",
     name: "Slick's Vent",
     type: "Byproduct",
-    description: null,
+    description: "A vent that was at the end of Slick's body. It pushes water backward, serving as the source of its swimming power. Smooth and hard in texture.",
   },
   {
     id: "stella-sigil",
@@ -199,8 +199,8 @@ export const items = [
     description: null,
   },
   {
-    id: "infespor-devil-wing",
-    name: "Infespor's Devil Wing",
+    id: "infesper-devil-wing",
+    name: "Infesper's Devil Wing",
     type: "Byproduct",
     description: null,
   },
@@ -232,7 +232,7 @@ export const items = [
     id: "hornet-insect-wing",
     name: "Hornet's Insect Wing",
     type: "Byproduct",
-    description: "A round orb rising from Dandelion's head. On a deep green base, it's decorated with teal patterns and glos faintly.",
+    description: "An insect wing on Hornet's back. Marked with its signature stripes. It repels water and oil, making it useful in many ways.",
   },
   {
     id: "fried-feather",
@@ -253,34 +253,34 @@ export const items = [
     description: "Vesper's demon wing, used for flight. Small but thick and hard. Its surface is smooth and glossy.",
   },
   {
-    id: "hide",
-    name: "Hide",
-    type: "Byproduct",
-    description: null,
-  },
-  {
-    id: "scales",
-    name: "Scales",
-    type: "Byproduct",
-    description: null,
-  },
-  {
     id: "monocular-tentacle",
     name: "Monocular's Tentacle",
     type: "Byproduct",
     description: null,
   },
   {
-    id: "ladifs-ring",
+    id: "ladif-ring",
     name: "Ladif's Ring",
     type: "Byproduct",
-    description: null,
+    description: "A ring on Ladif's antenna. A pale yellow stripe crosses the ring. Hollow inside, so it's light for its size.",
+  },
+  {
+    id: "ladif-insect-wing",
+    name: "Ladif's Insect Wing",
+    type: "Byproduct",
+    description: "An insect wing on Ladif's back. A translucent wing sits inside a hard outer shell. It's very thin, made for moving at high speed.",
   },
   {
     id: "thunder-wisp-sigil",
     name: "Thunder Wisp's Sigil",
     type: "Byproduct",
     description: null,
+  },
+  {
+    id: "nepenthes-leaf",
+    name: "Nepenthes's Leaf",
+    type: "Byproduct",
+    description: "A leaf forming Nepenthes's body. Its tips glow brightly with a fluorescent light.",
   },
   {
     id: "cube",

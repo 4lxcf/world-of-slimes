@@ -44,8 +44,8 @@ export const skills = [
     name: "Dark Orb",
     type: "magic",
     mpCost: { min: 15, max: 15 },
-    cooldown: { min: 3.1, max: 3.2 },
-    damage: { min: 17, max: 18 },
+    cooldown: { min: 2.9, max: 3.2 },
+    damage: { min: 17, max: 30 },
   },
   {
     id: "dark-strike",
@@ -204,8 +204,8 @@ export const skills = [
     name: "Dark Swing",
     type: "physical",
     mpCost: { min: 21, max: 21 },
-    cooldown: { min: 5.6, max: 5.7 },
-    damage: { min: 20, max: 22 },
+    cooldown: { min: 5.0, max: 5.7 },
+    damage: { min: 20, max: 42 },
   },
 ] as const;
 
