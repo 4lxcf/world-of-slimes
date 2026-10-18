@@ -1,5 +1,6 @@
 import { slimes, type Slime } from "./data/slimes";
 import { slimeImages } from "./data/slime-images";
+import { itemImages } from "./data/item-images";
 import { items, type ItemId } from "./data/items";
 import { locations } from "./data/locations";
 import { skills } from "./data/skills";
@@ -351,14 +352,26 @@ function renderDetailItems(slime: Slime): string {
     return '<p class="detail-unknown">Nenhum drop registrado</p>';
   }
 
-  return `<ul class="detail-list">${slime.drops.map((itemId) => {
+  return `<ul class="detail-list detail-drop-list">${slime.drops.map((itemId) => {
     const item = itemsById.get(itemId);
     if (!item) {
       throw new Error(`Item não cadastrado: ${itemId}`);
     }
     const description = item.description ?? "Descrição a catalogar";
     const type = item.type ?? "Tipo a catalogar";
-    return `<li><strong>${escapeHtml(item.name)}</strong><span class="detail-meta">${escapeHtml(type)} · ${escapeHtml(description)}</span></li>`;
+    const imagePath = itemImages[itemId];
+    const dropRate = slime.dropRates?.[itemId];
+    const dropRateLabel = dropRate === undefined || dropRate === null
+      ? "Chance de drop a catalogar"
+      : `Chance de drop: ${dropRate}%`;
+    return `<li class="detail-drop-entry">
+      ${imagePath ? `<img class="detail-drop-image" src="${imagePath}" alt="" loading="lazy" decoding="async">` : ""}
+      <div class="detail-drop-info">
+        <strong>${escapeHtml(item.name)}</strong>
+        <span class="detail-meta">${escapeHtml(type)} · ${escapeHtml(description)}</span>
+        <span class="detail-meta detail-drop-rate">${escapeHtml(dropRateLabel)}</span>
+      </div>
+    </li>`;
   }).join("")}</ul>`;
 }
 

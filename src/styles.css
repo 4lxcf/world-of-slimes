@@ -1596,6 +1596,32 @@ tbody tr:hover {
   font-size: 11px;
 }
 
+.detail-drop-list li + li::before {
+  content: none;
+}
+
+.detail-drop-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.detail-drop-image {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  object-fit: contain;
+}
+
+.detail-drop-info {
+  min-width: 0;
+}
+
+.detail-drop-rate {
+  color: #5c7861;
+  font-weight: 600;
+}
+
 .synthesis-intro {
   margin: -3px 0 14px;
   color: #7a827d;

@@ -14,6 +14,7 @@ export type Slime = {
   traits: SlimeTraits | null;
   skills: SkillId[] | null;
   drops: ItemId[] | null;
+  dropRates?: Partial<Record<ItemId, number | null>>;
   synthesis: "unknown" | "unavailable" | null;
 };
 
@@ -70,6 +71,9 @@ export const slimes: Slime[] = [
     skills: null,
     drops: ["small-slime-fragment"],
     synthesis: "unknown",
+    dropRates: {
+      "small-slime-fragment": 100,
+    }
   },
   {
     id: 3,
@@ -268,7 +272,7 @@ export const slimes: Slime[] = [
     type2: null,
     locations: [
       { locationId: "shadow-forest-entrance", levelRange: {min: 1, max: 2}, timeOfDay: "Both" },
-      { locationId: "forest-path", levelRange: null, timeOfDay: "Both" },
+      { locationId: "forest-path", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
       { locationId: "misty-hill", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
     ],
     traits: ["mining"],
@@ -513,11 +517,8 @@ export const slimes: Slime[] = [
     type1: "water",
     type2: null,
     locations: [
-      {
-        locationId: "quiet-trail",
-        levelRange: { min: 4, max: 4 },
-        timeOfDay: "Both",
-      },
+      { locationId: "quiet-trail", levelRange: { min: 4, max: 4 }, timeOfDay: "Both" },
+      { locationId: "shadow-forest-entrance", levelRange: { min: 4, max: 4 }, timeOfDay: "Both" },
     ],
     traits: ["swimming"],
     skills: null,
