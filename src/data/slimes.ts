@@ -1585,7 +1585,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 115,
-    name: "Spooky",
+    name: "Ghost",
     dataStatus: "pending",
     type1: "magic",
     type2: null,

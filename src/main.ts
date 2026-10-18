@@ -202,18 +202,17 @@ let selectedMapLocationId: string = locations[0]?.id ?? "";
 let selectedSynthesisItem: ItemId | null = null;
 
 const SYNTHESIS_LEVEL_MIN = 4;
-const SYNTHESIS_LEVEL_MAX = 31;
 const SYNTHESIS_LEVELS_PER_RANGE = 3;
 
 function getSynthesisLevelRange(level: number): { min: number; max: number } | null {
-  if (!Number.isInteger(level) || level < SYNTHESIS_LEVEL_MIN || level > SYNTHESIS_LEVEL_MAX) {
+  if (!Number.isInteger(level) || level < SYNTHESIS_LEVEL_MIN) {
     return null;
   }
   const rangeMin = SYNTHESIS_LEVEL_MIN +
     Math.floor((level - SYNTHESIS_LEVEL_MIN) / SYNTHESIS_LEVELS_PER_RANGE) * SYNTHESIS_LEVELS_PER_RANGE;
   return {
     min: rangeMin,
-    max: Math.min(rangeMin + SYNTHESIS_LEVELS_PER_RANGE - 1, SYNTHESIS_LEVEL_MAX),
+    max: rangeMin + SYNTHESIS_LEVELS_PER_RANGE - 1,
   };
 }
 
@@ -439,13 +438,10 @@ function renderSlimeDetails(slime: Slime): void {
     <a class="back-link" href="#slimes"><span aria-hidden="true">←</span> Voltar à Slimepedia</a>
     <section class="slime-detail-layout">
       <div class="slime-detail-art">
-        <span class="detail-art-number">#${String(slime.id).padStart(3, "0")}</span>
         ${renderSlimeAvatar(slime, "detail-avatar")}
-        <span class="detail-art-caption">WORLD OF SLIMES</span>
       </div>
       <div class="slime-detail-info">
         <header class="slime-detail-heading">
-          <p class="eyebrow"><span class="eyebrow-line"></span> GUIA DA COMUNIDADE · SLIME #${String(slime.id).padStart(3, "0")}</p>
           <h1 class="detail-title">${escapeHtml(slime.name ?? "Nome a confirmar")}</h1>
         </header>
         <table class="slime-summary-table">
@@ -453,8 +449,8 @@ function renderSlimeDetails(slime: Slime): void {
             <tr><th scope="row">ID</th><td>#${String(slime.id).padStart(3, "0")}</td></tr>
             <tr><th scope="row">Tipo</th><td><div class="detail-types">${types || '<span class="detail-unknown">A catalogar</span>'}</div></td></tr>
             <tr><th scope="row">Traits</th><td>${renderSummaryTraits(slime)}</td></tr>
-            <tr><th scope="row">Localizações</th><td>${escapeHtml(locationsLabel)}</td></tr>
-            <tr><th scope="row">Sínteses</th><td>${escapeHtml(synthesisLabel)}</td></tr>
+            <tr><th scope="row">Localizações</th><td><a class="detail-summary-link" href="#detail-locations" data-detail-scroll>${escapeHtml(locationsLabel)}</a></td></tr>
+            <tr><th scope="row">Sínteses</th><td><a class="detail-summary-link" href="#detail-syntheses" data-detail-scroll>${escapeHtml(synthesisLabel)}</a></td></tr>
           </tbody>
         </table>
       </div>
@@ -462,8 +458,8 @@ function renderSlimeDetails(slime: Slime): void {
     <div class="detail-grid">
       <section class="detail-card detail-stats-card"><h2>Stats</h2><p class="detail-unknown">Stats ainda não catalogados.</p></section>
       <section class="detail-card"><h2>Drops</h2>${renderDetailItems(slime)}</section>
-      <section class="detail-card detail-card-wide"><h2>Sínteses</h2>${renderDetailSynthesis(slime)}</section>
-      <section class="detail-card"><h2>Localizações</h2>${renderDetailLocations(slime)}</section>
+      <section class="detail-card detail-card-wide" id="detail-syntheses"><h2>Sínteses</h2>${renderDetailSynthesis(slime)}</section>
+      <section class="detail-card" id="detail-locations"><h2>Localizações</h2>${renderDetailLocations(slime)}</section>
       <section class="detail-card"><h2>Skills</h2>${renderDetailSkills(slime)}</section>
     </div>
   `;
@@ -541,7 +537,7 @@ function renderSynthesisResults(): void {
   selectedSynthesisItem = (itemSelect?.value as ItemId | undefined) || null;
   const hasSelection = mainSlimeId !== null || subSlimeId !== null || levelValue.length > 0 || selectedSynthesisItem !== null;
   if (levelValue.length > 0 && selectedRange === null) {
-    results.innerHTML = `<div class="simulator-empty">Informe o level do Main slime entre ${SYNTHESIS_LEVEL_MIN} e ${SYNTHESIS_LEVEL_MAX}.</div>`;
+    results.innerHTML = `<div class="simulator-empty">Informe um level inteiro igual ou superior a ${SYNTHESIS_LEVEL_MIN}.</div>`;
     return;
   }
   if (!hasSelection) {
@@ -638,7 +634,7 @@ function renderSynthesisPage(): void {
           </div>
         </div>
         <span class="simulator-operator simulator-arrow" aria-hidden="true">→</span>
-        <label class="field-label level-field">Main slime level<input id="synthesis-level" type="number" min="${SYNTHESIS_LEVEL_MIN}" max="${SYNTHESIS_LEVEL_MAX}" step="1" placeholder="4–31" /></label>
+        <label class="field-label level-field">Main slime level<input id="synthesis-level" type="number" min="${SYNTHESIS_LEVEL_MIN}" step="1" placeholder="4 ou mais" /></label>
         <label class="field-label item-slot" for="synthesis-item">Ingredients (optional)<select id="synthesis-item"><option value="">No ingredients</option>${itemOptions}</select></label>
         <button class="button-secondary simulator-reset" type="button" data-reset-synthesis>↺ Reset</button>
       </div>
@@ -956,6 +952,19 @@ searchInput.addEventListener("input", renderSlimes);
 typeFilter.addEventListener("change", renderSlimes);
 sortSelect.addEventListener("change", renderSlimes);
 window.addEventListener("hashchange", renderRoute);
+detailScreen.addEventListener("click", (event) => {
+  const target = event.target;
+  if (!(target instanceof Element)) {
+    return;
+  }
+  const link = target.closest<HTMLAnchorElement>("a[data-detail-scroll]");
+  const section = link ? detailScreen.querySelector<HTMLElement>(link.hash) : null;
+  if (!link || !section) {
+    return;
+  }
+  event.preventDefault();
+  section.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 document.addEventListener("keydown", (event) => {
   if (event.key === "/" && !(event.target instanceof HTMLInputElement)) {
     event.preventDefault();
