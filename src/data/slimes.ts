@@ -54,7 +54,7 @@ export const slimes: Slime[] = [
       { locationId: "shadow-forest-entrance", levelRange: {min: 1, max: 2}, timeOfDay: "Both" },
       { locationId: "forest-path", levelRange: { min: 1, max: 3 }, timeOfDay: "Both" },
       { locationId: "misty-hill", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
-      { locationId: "cool-pond", levelRange: null, timeOfDay: "Both" },
+      { locationId: "cool-pond", levelRange: { min: 3, max: 5 }, timeOfDay: "Both" },
       { locationId: "tainted-wellspring", levelRange: null, timeOfDay: "Both" },
       { locationId: "north-gate", levelRange: { min: 4, max: 6 }, timeOfDay: "Both" },
       { locationId: "abandoned-farmland", levelRange: { min: 5, max: 7 }, timeOfDay: "Both" },
@@ -96,7 +96,7 @@ export const slimes: Slime[] = [
     locations: [
       { locationId: "cave-1", levelRange: null, timeOfDay: "Both" },
       { locationId: "cave-2", levelRange: null, timeOfDay: "Both" },
-      { locationId: "cave-3", levelRange: null, timeOfDay: "Both" },
+      { locationId: "cave-3", levelRange: { min: 21, max: 24 }, timeOfDay: "Both" },
       { locationId: "hidden-shore-3", levelRange: null, timeOfDay: "Both" },
       { locationId: "hidden-shore-4", levelRange: null, timeOfDay: "Both" },
       { locationId: "hidden-shore-5", levelRange: null, timeOfDay: "Both" },
@@ -117,6 +117,7 @@ export const slimes: Slime[] = [
       { locationId: "noecheon-north-entrance", levelRange: {min: 16, max: 17}, timeOfDay: "Both" },
       { locationId: "snowfield-passage", levelRange: {min: 17, max: 17}, timeOfDay: "Both" },
       { locationId: "noecheon-mountain-trail-1", levelRange: {min: 16, max: 17}, timeOfDay: "Both" },
+      { locationId: "noecheon-mountain-trail-4", levelRange: {min: 18, max: 20}, timeOfDay: "Both" },
     ],
     traits: null,
     skills: ["leaf-spread", "grass-shot"],
@@ -272,13 +273,18 @@ export const slimes: Slime[] = [
     type2: null,
     locations: [
       { locationId: "shadow-forest-entrance", levelRange: {min: 1, max: 2}, timeOfDay: "Both" },
-      { locationId: "forest-path", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
+      { locationId: "forest-path", levelRange: { min: 1, max: 3 }, timeOfDay: "Both" },
       { locationId: "misty-hill", levelRange: { min: 2, max: 4 }, timeOfDay: "Both" },
     ],
     traits: ["mining"],
     skills: ["wind-ball"],
     drops: ["tweety-hide", "small-slime-fragment", "parched-core-fragment"],
     synthesis: null,
+    dropRates: {
+      "tweety-hide": 48.6,
+      "small-slime-fragment": 100,
+      "parched-core-fragment": 2.9,
+    }
   },
   {
     id: 17,
@@ -369,11 +375,8 @@ export const slimes: Slime[] = [
     type1: "magic",
     type2: "fire",
     locations: [
-      {
-        locationId: "misty-hill",
-        levelRange: { min: 4, max: 4 },
-        timeOfDay: "Both",
-      },
+      { locationId: "misty-hill", levelRange: { min: 4, max: 4 }, timeOfDay: "Both" },
+      { locationId: "cool-pond", levelRange: { min: 4, max: 5 }, timeOfDay: "Both" },
     ],
     traits: ["luminescence"],
     skills: null,
@@ -403,11 +406,8 @@ export const slimes: Slime[] = [
     type1: "water",
     type2: "magic",
     locations: [
-      {
-        locationId: "north-gate",
-        levelRange: { min: 4, max: 6 },
-        timeOfDay: "Both",
-      },
+      { locationId: "north-gate", levelRange: { min: 4, max: 6 }, timeOfDay: "Both" },
+      { locationId: "cool-pond", levelRange: { min: 4, max: 5 }, timeOfDay: "Both" },
     ],
     traits: ["swimming"],
     skills: ["water-ball"],
@@ -420,10 +420,12 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "water",
     type2: "poison",
-    locations: null,
+    locations: [
+      { locationId: "tainted-wellspring", levelRange: { min: 10, max: 11 }, timeOfDay: "Both" },
+    ],
     traits: ["swimming"],
-    skills: null,
-    drops: ["small-slime-fragment"],
+    skills: ["water-ball"],
+    drops: ["small-slime-fragment", "poison-princes-orb", "dewy-core-fragment"],
     synthesis: null,
   },
   {
@@ -519,6 +521,7 @@ export const slimes: Slime[] = [
     locations: [
       { locationId: "quiet-trail", levelRange: { min: 4, max: 4 }, timeOfDay: "Both" },
       { locationId: "shadow-forest-entrance", levelRange: { min: 4, max: 4 }, timeOfDay: "Both" },
+      { locationId: "tainted-wellspring", levelRange: { min: 4, max: 4 }, timeOfDay: "Both" },
     ],
     traits: ["swimming"],
     skills: null,
@@ -531,7 +534,9 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "water",
     type2: "poison",
-    locations: null,
+    locations: [
+      { locationId: "tainted-wellspring", levelRange: { min: 7, max: 7 }, timeOfDay: "Both" },
+    ],
     traits: null,
     skills: null,
     drops: ["small-slime-fragment", "poison-bass-scale"],
@@ -603,10 +608,12 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "light",
     type2: "electric",
-    locations: null,
+    locations: [
+      { locationId: "noecheon-mountain-trail-4", levelRange: { min: 18, max: 20 }, timeOfDay: "Night" },
+    ],
     traits: ["luminescence"],
     skills: null,
-    drops: ["small-slime-fragment"],
+    drops: ["small-slime-fragment", "glowing-core-fragment", "thunder-wisp-sigil", "weightless-core-fragment"],
     synthesis: null,
   },
   {
@@ -868,10 +875,11 @@ export const slimes: Slime[] = [
     locations: [
       { locationId: "noecheon-south-entrance", levelRange: {min: 14, max: 16}, timeOfDay: "Both" },
       { locationId: "noecheon-mountain-trail-1", levelRange: {min: 15, max: 17}, timeOfDay: "Both" },
+      { locationId: "noecheon-mountain-trail-4", levelRange: {min: 18, max: 19}, timeOfDay: "Both" },
     ],
     traits: null,
     skills: null,
-    drops: ["dandelion-orb", "small-slime-fragment", "verdant-core-fragment"],
+    drops: ["dandelion-orb", "small-slime-fragment", "verdant-core-fragment", "weightless-core-fragment"],
     synthesis: null,
   },
   {
@@ -959,11 +967,12 @@ export const slimes: Slime[] = [
     locations: [
       { locationId: "cave-1", levelRange: null, timeOfDay: "Both" },
       { locationId: "cave-2", levelRange: null, timeOfDay: "Both" },
+      { locationId: "cave-3", levelRange: { min: 23, max: 25 }, timeOfDay: "Both" },
       { locationId: "cave-9", levelRange: null, timeOfDay: "Both" },
     ],
     traits: ["flight"],
     skills: ["wind-ball", "dark-orb", "dark-swing"],
-    drops: ["small-slime-fragment", "vesper-demon-wing"],
+    drops: ["small-slime-fragment", "vesper-demon-wing", "weightless-core-fragment"],
     synthesis: null,
   },
   {
@@ -972,10 +981,13 @@ export const slimes: Slime[] = [
     dataStatus: "pending",
     type1: "wind",
     type2: "poison",
-    locations: [{ locationId: "cave-2", levelRange: null, timeOfDay: "Both" }],
+    locations: [
+      { locationId: "cave-2", levelRange: null, timeOfDay: "Both" },
+      { locationId: "cave-3", levelRange: { min: 25, max: 25 }, timeOfDay: "Both" },
+    ],
     traits: ["flight"],
     skills: ["poison-ball"],
-    drops: ["small-slime-fragment", "infesper-devil-wing"],
+    drops: ["small-slime-fragment", "infesper-devil-wing", "weightless-core-fragment"],
     synthesis: null,
   },
   {
@@ -985,11 +997,7 @@ export const slimes: Slime[] = [
     type1: "ground",
     type2: "metal",
     locations: [
-      {
-        locationId: "cave-1",
-        levelRange: {min: 22, max: 22},
-        timeOfDay: "Both"
-      }
+      { locationId: "cave-1", levelRange: {min: 22, max: 22}, timeOfDay: "Both" },
     ],
     traits: ["mining"],
     skills: ["iron-shot"],
@@ -1046,14 +1054,14 @@ export const slimes: Slime[] = [
   },
   {
     id: 70,
-    name: "Beholder",
+    name: "Monocular",
     dataStatus: "pending",
     type1: "dark",
     type2: "magic",
-    locations: [{ locationId: "cave-3", levelRange: null, timeOfDay: "Both" }],
+    locations: [{ locationId: "cave-3", levelRange: { min: 25, max: 25 }, timeOfDay: "Both" }],
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
+    drops: ["small-slime-fragment", "monocular-tentacle", "weightless-core-fragment"],
     synthesis: null,
   },
   {
@@ -1070,7 +1078,7 @@ export const slimes: Slime[] = [
   },
   {
     id: 72,
-    name: "Turtle",
+    name: "Tottle",
     dataStatus: "pending",
     type1: "water",
     type2: null,

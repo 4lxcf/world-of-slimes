@@ -88,6 +88,14 @@ export const skills = [
     damage: { min: 12, max: 12 },
   },
   {
+    id: "poison-bang",
+    name: "Poison Bang",
+    type: "magic",
+    mpCost: { min: 51, max: 51 },
+    cooldown: { min: 9.9, max: 9.9 },
+    damage: { min: 31, max: 31 },
+  },
+  {
     id: "light-orb",
     name: "Light Orb",
     type: "magic",
@@ -160,6 +168,14 @@ export const skills = [
     damage: { min: 80, max: 80 },
   },
   {
+    id: "sonic-boom",
+    name: "Sonic Boom",
+    type: "magic",
+    mpCost: { min: 37, max: 37 },
+    cooldown: { min: 7.0, max: 7.0 },
+    damage: { min: 26, max: 26 },
+  },
+  {
     id: "magic-flash",
     name: "Magic Flash",
     type: "magic",
@@ -181,7 +197,7 @@ export const skills = [
     type: "magic",
     mpCost: { min: 15, max: 15 },
     cooldown: { min: 3.2, max: 3.7 },
-    damage: { min: 9, max: 12 },
+    damage: { min: 9, max: 15 },
   },
   {
     id: "lightning-dash",
@@ -189,7 +205,7 @@ export const skills = [
     type: "physical",
     mpCost: { min: 31, max: 31 },
     cooldown: { min: 9.6, max: 9.6 },
-    damage: { min: 14, max: 14 },
+    damage: { min: 14, max: 15 },
   },
   {
     id: "iron-shot",
