@@ -1035,9 +1035,9 @@ export const slimes: Slime[] = [
     type1: "power",
     type2: "light",
     locations: null,
-    traits: null,
+    traits: ["riding"],
     skills: null,
-    drops: ["small-slime-fragment"],
+    drops: null,
     synthesis: null,
   },
   {
@@ -1503,9 +1503,9 @@ export const slimes: Slime[] = [
     type1: "wind",
     type2: "dark",
     locations: null,
-    traits: null,
+    traits: ["flight"],
     skills: null,
-    drops: ["small-slime-fragment"],
+    drops: null,
     synthesis: null,
   },
   {

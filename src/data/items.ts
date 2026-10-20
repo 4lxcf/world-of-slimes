@@ -94,6 +94,12 @@ export const items = [
     description: "A hard fragment making up Shell's shell. Its vivid blue stripes contrast with the orange base.",
   },
   {
+    id: "hard-shell-solid-fragment",
+    name: "Shell's Solid Fragment",
+    type: "Byproduct",
+    description: null,
+  },
+  {
     id: "mandrake-leaf",
     name: "Mandrake's Leaf",
     type: "Byproduct",
