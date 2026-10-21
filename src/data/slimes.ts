@@ -341,7 +341,7 @@ export const slimes: Slime[] = [
     ],
     traits: ["mining"],
     skills: ["ice-ball"],
-    drops: ["small-slime-fragment", "icy-hide"],
+    drops: ["small-slime-fragment", "icy-hide", "parched-core-fragment"],
     synthesis: null,
   },
   {

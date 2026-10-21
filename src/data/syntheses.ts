@@ -146,7 +146,7 @@ const synthesisRows: SynthesisRow[] = [
   ["058019035018sigil", 58, 19, 35, 18, ["wisp-sigil"]],
   ["058019035026sigil", 58, 19, 35, 26, ["wisp-sigil"]],
   ["058019035046sigil", 58, 19, 35, 46, ["wisp-sigil"]],
-  ["059019056052feather", 59, 19, 48, 52, ["fried-feather"]],
+  ["059019056052feather", 59, 19, 48, 52, ["fried-feather", "fluffy-feather"]],
   ["059019049052n", 59, 19, 49, 52, []],
   ["059019052050feather", 59, 19, 52, 50, ["fluffy-feather", "fried-feather"]],
   ["059019056022feather", 59, 19, 56, 22, ["fluffy-feather"]],
