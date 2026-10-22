@@ -247,9 +247,6 @@ function getSynthesisIngredientsLabel(ingredientIds: ItemId[] | null): string {
 }
 
 function formatRecipeLevel(recipe: (typeof syntheses)[number]): string {
-  if (recipe.levelQualifier === "maximum" && recipe.requiredLevel !== null) {
-    return `≤ Lv. ${recipe.requiredLevel}`;
-  }
   return formatSynthesisLevel(recipe.requiredLevel);
 }
 
@@ -376,44 +373,46 @@ function renderDetailItems(slime: Slime): string {
 }
 
 function renderDetailSynthesis(slime: Slime): string {
-  const recipes = syntheses.filter(
+  const sortRecipes = (recipes: typeof syntheses) => recipes.sort((first, second) => {
+    if (first.requiredLevel === null && second.requiredLevel !== null) {
+      return 1;
+    }
+    if (first.requiredLevel !== null && second.requiredLevel === null) {
+      return -1;
+    }
+    return (first.requiredLevel ?? 0) - (second.requiredLevel ?? 0) ||
+      first.resultSlimeId - second.resultSlimeId;
+  });
+  const participationRecipes = sortRecipes(syntheses.filter(
+    ({ mainSlimeId, subSlimeId }) => mainSlimeId === slime.id || subSlimeId === slime.id,
+  ));
+  const resultRecipes = sortRecipes(syntheses.filter(
     ({ mainSlimeId, subSlimeId, resultSlimeId }) =>
-      mainSlimeId === slime.id || subSlimeId === slime.id || resultSlimeId === slime.id,
-  );
+      resultSlimeId === slime.id && mainSlimeId !== slime.id && subSlimeId !== slime.id,
+  ));
 
-  if (recipes.length > 0) {
-    const renderRecipeSlime = (slimeId: number, role: string) => {
-      const recipeSlime = slimesById.get(slimeId);
-      if (!recipeSlime) {
-        throw new Error(`Síntese referencia slime inexistente: #${slimeId}`);
-      }
-      const name = recipeSlime.name ?? `Slime #${String(slimeId).padStart(3, "0")}`;
-      return `<div class="synthesis-part">
-        ${renderSlimeAvatar(recipeSlime, "detail-synthesis-avatar")}
-        <span class="synthesis-part-role">${role}</span>
-        <a class="synthesis-part-name" href="#slime/${slimeId}">${escapeHtml(name)}</a>
-        <span class="synthesis-part-id">#${String(slimeId).padStart(3, "0")}</span>
-      </div>`;
-    };
-
+  if (participationRecipes.length > 0 || resultRecipes.length > 0) {
+    const renderRecipeGroup = (
+      heading: string,
+      recipes: typeof syntheses,
+      isParticipationGroup: boolean,
+    ) => recipes.length === 0 ? "" : `
+      <section class="detail-synthesis-group">
+        <h3 class="detail-synthesis-group-heading">
+          <span>${heading}</span>
+          <span class="detail-synthesis-group-count">${recipes.length}</span>
+        </h3>
+        <div class="detail-synthesis-list">${recipes.map((recipe) => {
+          const recipeIndex = syntheses.indexOf(recipe);
+          const shouldReverse = isParticipationGroup
+            ? recipe.subSlimeId === slime.id
+            : recipe.mainSlimeId > recipe.subSlimeId;
+          return renderDetailSynthesisRecipe(recipe, recipeIndex, shouldReverse);
+        }).join("")}</div>
+      </section>`;
     return `<p class="synthesis-intro">Combinações conhecidas para ${escapeHtml(slime.name ?? `Slime #${String(slime.id).padStart(3, "0")}`)}.</p>
-      <div class="detail-synthesis-list">${recipes.map((recipe) => {
-        const level = formatRecipeLevel(recipe);
-        const ingredients = getSynthesisIngredientsLabel(recipe.ingredients);
-        return `<article class="detail-synthesis-recipe">
-          <div class="synthesis-flow">
-            ${renderRecipeSlime(recipe.mainSlimeId, "MAIN SLIME")}
-            <span class="synthesis-operator synthesis-plus" aria-label="mais">+</span>
-            ${renderRecipeSlime(recipe.subSlimeId, "SUB SLIME")}
-            <span class="synthesis-operator synthesis-arrow" aria-label="produz">→</span>
-            ${renderRecipeSlime(recipe.resultSlimeId, "RESULTADO")}
-          </div>
-          <div class="synthesis-recipe-meta">
-            <span class="synthesis-meta-item"><span>LEVEL</span><strong>${escapeHtml(level)}</strong></span>
-            <span class="synthesis-meta-item synthesis-ingredient"><span>INGREDIENTE</span><strong>${escapeHtml(ingredients)}</strong></span>
-          </div>
-        </article>`;
-      }).join("")}</div>`;
+      ${renderRecipeGroup("Participa como Main ou Sub slime", participationRecipes, true)}
+      ${renderRecipeGroup("Obtido como resultado", resultRecipes, false)}`;
   }
 
   if (slime.synthesis === "unavailable") {
@@ -423,6 +422,61 @@ function renderDetailSynthesis(slime: Slime): string {
     return '<p class="detail-unknown">Informação não verificada</p>';
   }
   return '<p class="detail-unknown">A catalogar</p>';
+}
+
+function renderDetailSynthesisRecipe(
+  recipe: (typeof syntheses)[number],
+  recipeIndex: number,
+  reversed: boolean,
+): string {
+  const mainSlimeId = reversed ? recipe.subSlimeId : recipe.mainSlimeId;
+  const subSlimeId = reversed ? recipe.mainSlimeId : recipe.subSlimeId;
+  const displayedRecipe = reversed
+    ? syntheses.find((candidate) =>
+        candidate.mainSlimeId === mainSlimeId &&
+        candidate.subSlimeId === subSlimeId &&
+        candidate.resultSlimeId === recipe.resultSlimeId &&
+        candidate.requiredLevel === recipe.requiredLevel &&
+        JSON.stringify(candidate.ingredients) === JSON.stringify(recipe.ingredients),
+      )
+    : recipe;
+  const renderRecipeSlime = (slimeId: number, role: string) => {
+    const recipeSlime = slimesById.get(slimeId);
+    if (!recipeSlime) {
+      throw new Error(`Síntese referencia slime inexistente: #${slimeId}`);
+    }
+    const name = recipeSlime.name ?? `Slime #${String(slimeId).padStart(3, "0")}`;
+    return `<div class="synthesis-part">
+      <span class="synthesis-part-role">${role}</span>
+      ${renderSlimeAvatar(recipeSlime, "detail-synthesis-avatar")}
+      <a class="synthesis-part-name" href="#slime/${slimeId}">${escapeHtml(name)}</a>
+      <span class="synthesis-part-id">#${String(slimeId).padStart(3, "0")}</span>
+    </div>`;
+  };
+  const level = formatRecipeLevel(recipe);
+  const ingredients = getSynthesisIngredientsLabel(recipe.ingredients);
+  const chance = displayedRecipe?.successChance;
+  const chanceLabel = chance == null ? "—%" : `${chance}%`;
+  const chanceDescription = chance == null
+    ? "Chance não informada para esta ordem"
+    : `Chance de sucesso: ${chanceLabel}`;
+
+  return `<article class="detail-synthesis-recipe" data-recipe-index="${recipeIndex}" data-reversed="${reversed}">
+    <div class="synthesis-flow">
+      ${renderRecipeSlime(mainSlimeId, "MAIN SLIME")}
+      <button class="synthesis-operator synthesis-reverse" type="button" data-reverse-detail-recipe aria-label="Inverter Main slime e Sub slime" title="Inverter Main slime e Sub slime">⇄</button>
+      ${renderRecipeSlime(subSlimeId, "SUB SLIME")}
+      <div class="synthesis-result-flow">
+        <span class="synthesis-chance" aria-label="${escapeHtml(chanceDescription)}">${escapeHtml(chanceLabel)}</span>
+        <span class="synthesis-operator synthesis-arrow" aria-label="produz">→</span>
+      </div>
+      ${renderRecipeSlime(recipe.resultSlimeId, "RESULTADO")}
+    </div>
+    <div class="synthesis-recipe-meta">
+      <span class="synthesis-meta-item"><span>LEVEL</span><strong>${escapeHtml(level)}</strong></span>
+      <span class="synthesis-meta-item synthesis-ingredient"><span>INGREDIENTE</span><strong>${escapeHtml(ingredients)}</strong></span>
+    </div>
+  </article>`;
 }
 
 function renderSlimeDetails(slime: Slime): void {
@@ -563,7 +617,6 @@ function renderSynthesisResults(): void {
     const subEligible = subSlimeId === null || recipe.subSlimeId === subSlimeId;
     const recipeRange = recipe.requiredLevel === null ? null : getSynthesisLevelRange(recipe.requiredLevel);
     const levelEligible = selectedRange === null || recipe.requiredLevel === null ||
-      recipe.levelQualifier === "maximum" ||
       (recipeRange !== null && recipeRange.min === selectedRange.min && recipeRange.max === selectedRange.max);
     const itemsEligible = selectedSynthesisItem === null ||
       recipe.ingredients === null ||
@@ -968,6 +1021,17 @@ window.addEventListener("hashchange", renderRoute);
 detailScreen.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) {
+    return;
+  }
+  const reverseButton = target.closest<HTMLButtonElement>("[data-reverse-detail-recipe]");
+  if (reverseButton) {
+    const article = reverseButton.closest<HTMLElement>(".detail-synthesis-recipe");
+    const recipeIndex = Number(article?.dataset.recipeIndex);
+    const recipe = syntheses[recipeIndex];
+    if (!article || !recipe) {
+      throw new Error("Não foi possível inverter a receita de síntese.");
+    }
+    article.outerHTML = renderDetailSynthesisRecipe(recipe, recipeIndex, article.dataset.reversed !== "true");
     return;
   }
   const link = target.closest<HTMLAnchorElement>("a[data-detail-scroll]");

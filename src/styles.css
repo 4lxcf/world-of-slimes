@@ -1596,7 +1596,7 @@ tbody tr:hover {
   font-size: 11px;
 }
 
-.detail-drop-list li + li::before {
+.detail-card .detail-drop-list li + li::before {
   content: none;
 }
 
@@ -1632,6 +1632,40 @@ tbody tr:hover {
 .detail-synthesis-list {
   display: grid;
   gap: 10px;
+}
+
+.detail-synthesis-group + .detail-synthesis-group {
+  margin-top: 24px;
+}
+
+.detail-synthesis-group-heading {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 11px;
+  padding: 8px 12px;
+  border: 1px solid #dce8db;
+  border-left: 4px solid #6d9870;
+  border-radius: 5px;
+  background: #eff5ed;
+  color: #36523b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.detail-synthesis-group-count {
+  display: grid;
+  min-width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 12px;
+  background: #dcebd9;
+  color: #36523b;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
 }
 
 .detail-synthesis-recipe {
@@ -1685,7 +1719,7 @@ tbody tr:hover {
 }
 
 .synthesis-part-role {
-  margin-bottom: 3px;
+  margin-bottom: 6px;
   color: #8d998f;
   font-family: var(--mono);
   font-size: 7px;
@@ -1728,12 +1762,42 @@ tbody tr:hover {
   font-weight: 600;
 }
 
+.synthesis-reverse {
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.synthesis-reverse:hover {
+  background: #e1ebdf;
+  color: #456b4d;
+}
+
+.synthesis-reverse:focus-visible {
+  outline: 2px solid #a9c4aa;
+  outline-offset: 2px;
+}
+
 .synthesis-arrow {
   width: 26px;
   height: 26px;
   background: #eaf2e8;
   color: #47744f;
   font-size: 16px;
+}
+
+.synthesis-result-flow {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+
+.synthesis-chance {
+  color: #8d998f;
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1;
 }
 
 .synthesis-recipe-meta {
