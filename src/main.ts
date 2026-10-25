@@ -33,20 +33,6 @@ function escapeHtml(value: string): string {
   });
 }
 
-function renderList(items: string[]): string {
-  if (items.length === 0) {
-    return '<span class="type-empty">—</span>';
-  }
-
-  return `<ul class="detail-list">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
-}
-
-function renderKnownList(items: string[] | null | undefined): string {
-  return items === null || items === undefined
-    ? '<span class="type-empty">A catalogar</span>'
-    : renderList(items);
-}
-
 function hasKnownSlimeIdentity(slime: Pick<Slime, "name" | "type1" | "type2">): boolean {
   return typeof slime.name === "string" && slime.name.trim().length > 0 && (slime.type1 !== null || slime.type2 !== null);
 }
@@ -60,13 +46,14 @@ function renderTraitCell(slime: Slime): string {
     return `<span class="type-empty">${escapeHtml(getTraitStatusText(slime))}</span>`;
   }
 
-  return renderKnownList(slime.traits.map((traitId) => {
+  const traits = slime.traits.map((traitId) => {
     const name = traitNames.get(traitId);
     if (!name) {
       throw new Error(`Trait não cadastrada: ${traitId}`);
     }
-    return name;
-  }));
+    return `<li>${escapeHtml(name)}</li>`;
+  }).join("");
+  return `<ul class="detail-list trait-cell-list">${traits}</ul>`;
 }
 
 const slimesById = new Map(slimes.map((slime) => [slime.id, slime]));
@@ -227,9 +214,14 @@ function formatSynthesisLevel(level: number | null): string {
     : `Level ${level} fora do intervalo disponível`;
 }
 
-function getSynthesisIngredientsLabel(ingredientIds: ItemId[] | null): string {
+function getSynthesisIngredientsLabel(
+  ingredientIds: ItemId[] | null,
+  ingredientStatus: (typeof syntheses)[number]["ingredientStatus"] = "undetermined",
+): string {
   if (ingredientIds === null) {
-    return "Ingredients not confirmed";
+    return ingredientStatus === "required-undiscovered"
+      ? "O ingrediente necessário ainda não foi descoberto"
+      : "Ainda não foi possível confirmar se precisa de ingrediente";
   }
   if (ingredientIds.length === 0) {
     return "No ingredients";
@@ -247,6 +239,9 @@ function getSynthesisIngredientsLabel(ingredientIds: ItemId[] | null): string {
 }
 
 function formatRecipeLevel(recipe: (typeof syntheses)[number]): string {
+  if (recipe.minimumMainLevel !== null) {
+    return `Level mínimo do Main slime: Lv. ${recipe.minimumMainLevel}`;
+  }
   return formatSynthesisLevel(recipe.requiredLevel);
 }
 
@@ -349,11 +344,15 @@ function renderDetailItems(slime: Slime): string {
     return '<p class="detail-unknown">Nenhum drop registrado</p>';
   }
 
-  return `<ul class="detail-list detail-drop-list">${slime.drops.map((itemId) => {
+  const drops = slime.drops.map((itemId) => {
     const item = itemsById.get(itemId);
     if (!item) {
       throw new Error(`Item não cadastrado: ${itemId}`);
     }
+    return { itemId, item };
+  }).sort((first, second) => first.item.name.localeCompare(second.item.name, "pt-BR"));
+
+  return `<ul class="detail-list detail-drop-list">${drops.map(({ itemId, item }) => {
     const description = item.description ?? "Descrição a catalogar";
     const type = item.type ?? "Tipo a catalogar";
     const imagePath = itemImages[itemId];
@@ -381,7 +380,8 @@ function renderDetailSynthesis(slime: Slime): string {
       return -1;
     }
     return (first.requiredLevel ?? 0) - (second.requiredLevel ?? 0) ||
-      first.resultSlimeId - second.resultSlimeId;
+      (first.resultSlimeId ?? Number.MAX_SAFE_INTEGER) -
+        (second.resultSlimeId ?? Number.MAX_SAFE_INTEGER);
   });
   const participationRecipes = sortRecipes(syntheses.filter(
     ({ mainSlimeId, subSlimeId }) => mainSlimeId === slime.id || subSlimeId === slime.id,
@@ -400,7 +400,13 @@ function renderDetailSynthesis(slime: Slime): string {
       const groupedRecipeIndexes = new Map<string, number[]>();
       recipes.forEach((recipe) => {
         const pair = [recipe.mainSlimeId, recipe.subSlimeId].sort((a, b) => a - b);
-        const key = JSON.stringify([pair[0], pair[1], recipe.resultSlimeId, recipe.requiredLevel]);
+        const key = JSON.stringify([
+          pair[0],
+          pair[1],
+          recipe.resultSlimeId,
+          recipe.requiredLevel,
+          recipe.minimumMainLevel,
+        ]);
         const indexes = groupedRecipeIndexes.get(key) ?? [];
         indexes.push(syntheses.indexOf(recipe));
         groupedRecipeIndexes.set(key, indexes);
@@ -466,8 +472,23 @@ function renderDetailSynthesisRecipe(
       <span class="synthesis-part-id">#${String(slimeId).padStart(3, "0")}</span>
     </div>`;
   };
+  const renderRecipeResult = (slimeId: number | null) => {
+    if (slimeId === null) {
+      return `<div class="synthesis-part">
+        <span class="synthesis-part-role">RESULTADO</span>
+        <span class="synthesis-result-placeholder" aria-hidden="true">?</span>
+        <strong class="synthesis-result-unknown-name">Resultado não descoberto</strong>
+      </div>`;
+    }
+    return renderRecipeSlime(slimeId, "RESULTADO");
+  };
   const level = formatRecipeLevel(recipe);
-  const renderIngredient = (itemId: ItemId | null, chance: number | null, noIngredient = false) => {
+  const renderIngredient = (
+    itemId: ItemId | null,
+    chance: number | null,
+    ingredientStatus: (typeof syntheses)[number]["ingredientStatus"],
+    noIngredient = false,
+  ) => {
     const item = itemId === null ? null : itemsById.get(itemId);
     if (itemId !== null && !item) {
       throw new Error(`Item não cadastrado na receita: ${itemId}`);
@@ -477,12 +498,14 @@ function renderDetailSynthesisRecipe(
       ? "Chance não informada para esta ordem"
       : `Chance de sucesso: ${chanceLabel}`;
     const imagePath = itemId === null ? undefined : itemImages[itemId];
-    const itemName = item?.name ?? (noIngredient ? "No ingredients" : "Ingredient not confirmed");
+    const itemName = item?.name ?? (noIngredient
+      ? "No ingredients"
+      : getSynthesisIngredientsLabel(null, ingredientStatus));
     return `<div class="synthesis-ingredient-option">
       <div class="synthesis-ingredient-part">
         ${imagePath
           ? `<img class="synthesis-item-avatar" src="${imagePath}" alt="" loading="lazy" decoding="async">`
-          : itemId !== null
+          : itemId !== null || ingredientStatus === "required-undiscovered"
             ? '<span class="synthesis-item-avatar synthesis-item-placeholder" aria-hidden="true">?</span>'
             : ""}
         <strong class="synthesis-item-name">${escapeHtml(itemName)}</strong>
@@ -500,19 +523,21 @@ function renderDetailSynthesisRecipe(
           entry.subSlimeId === subSlimeId &&
           entry.resultSlimeId === candidate.resultSlimeId &&
           entry.requiredLevel === candidate.requiredLevel &&
+          entry.minimumMainLevel === candidate.minimumMainLevel &&
+          entry.ingredientStatus === candidate.ingredientStatus &&
           JSON.stringify(entry.ingredients) === JSON.stringify(candidate.ingredients),
         )
       : candidate;
     const chance = displayedRecipe?.successChance ?? null;
     const ingredientIds = candidate.ingredients;
     if (ingredientIds === null) {
-      return [renderIngredient(null, chance)];
+      return [renderIngredient(null, chance, candidate.ingredientStatus)];
     }
     if (ingredientIds.length === 0) {
-      return [renderIngredient(null, chance, true)];
+      return [renderIngredient(null, chance, candidate.ingredientStatus, true)];
     }
     return ingredientIds.map((itemId) =>
-      renderIngredient(itemId, chance),
+      renderIngredient(itemId, chance, candidate.ingredientStatus),
     );
   }).join("");
 
@@ -523,7 +548,7 @@ function renderDetailSynthesisRecipe(
       ${renderRecipeSlime(subSlimeId, "SUB SLIME")}
       <span class="synthesis-operator synthesis-add" aria-hidden="true">+</span>
       <div class="synthesis-ingredient-options">${ingredientOptions}</div>
-      ${renderRecipeSlime(recipe.resultSlimeId, "RESULTADO")}
+      ${renderRecipeResult(recipe.resultSlimeId)}
     </div>
     <div class="synthesis-recipe-meta">
       <span class="synthesis-meta-item"><span>LEVEL</span><strong>${escapeHtml(level)}</strong></span>
@@ -598,30 +623,88 @@ function renderSlimeAvatar(slime: Slime, className = ""): string {
   return `<span class="slime-avatar${typeClass}${imageClass}${className ? ` ${className}` : ""}" aria-hidden="true">${content}</span>`;
 }
 
-function renderSlimePickerOptions(query = ""): string {
+function renderSlimePickerOptions(query = "", mainSlimeId: number | null = null): string {
   const normalizedQuery = query.trim().toLocaleLowerCase("pt-BR");
-  const matches = slimes.filter((slime) =>
+  const confirmedSlimes = [...slimes].filter((slime) =>
+    slime.name !== null && Number.isInteger(slime.id) && slime.id > 0,
+  );
+  const matches = confirmedSlimes.filter((slime) =>
     getSlimeLabel(slime).toLocaleLowerCase("pt-BR").includes(normalizedQuery),
   );
   if (matches.length === 0) {
     return '<p class="slime-picker-empty">Nenhum slime encontrado.</p>';
   }
-  return matches.map((slime) => `
-    <button class="slime-picker-option" type="button" data-select-slime="${slime.id}">
-      ${renderSlimeAvatar(slime, "simulator-avatar")}
-      <span>${escapeHtml(slime.name ?? "Nome a confirmar")}<small>#${String(slime.id).padStart(3, "0")}</small></span>
-    </button>
-  `).join("");
+  return matches.map((slime) => {
+    const matchingRecipes = mainSlimeId === null
+      ? []
+      : syntheses.filter((recipe) =>
+          recipe.mainSlimeId === mainSlimeId && recipe.subSlimeId === slime.id,
+        );
+    const hasKnownSynthesis = matchingRecipes.some((recipe) => recipe.resultSlimeId !== null);
+    const status = mainSlimeId === null
+      ? null
+      : hasKnownSynthesis
+        ? { icon: "✓", label: "Síntese descoberta", className: "is-known" }
+        : matchingRecipes.length > 0
+          ? { icon: "?", label: "Síntese possível; resultado ainda não descoberto", className: "is-undiscovered" }
+          : { icon: "×", label: "Nenhuma síntese registrada", className: "is-unavailable" };
+    return `
+      <button class="slime-picker-option" type="button" data-select-slime="${slime.id}">
+        ${renderSlimeAvatar(slime, "simulator-avatar")}
+        <span class="slime-picker-option-name">${escapeHtml(slime.name ?? "Nome a confirmar")}</span>
+        <small class="slime-picker-option-id">#${String(slime.id).padStart(3, "0")}</small>
+        ${status
+          ? `<span class="slime-picker-synthesis-status ${status.className}" aria-label="${status.label}" title="${status.label}">${status.icon}</span>`
+          : ""}
+      </button>
+    `;
+  }).join("");
 }
 
-function renderKnownSyntheses(): string {
-  if (syntheses.length === 0) {
-    return '<div class="section-empty"><strong>Nenhuma síntese catalogada ainda</strong><p>As receitas confirmadas aparecerão aqui.</p></div>';
+function renderItemPickerOptions(query = ""): string {
+  const normalizedQuery = query.trim().toLocaleLowerCase("pt-BR");
+  const matchingItems = [...items]
+    .filter((item) => item.type === "Byproduct")
+    .sort((first, second) => first.name.localeCompare(second.name, "pt-BR"))
+    .filter((item) => item.name.toLocaleLowerCase("pt-BR").includes(normalizedQuery));
+  const clearOption = `<button class="item-picker-option item-picker-clear" type="button" data-clear-item>
+    <span class="item-picker-image-placeholder" aria-hidden="true">×</span>
+    <span class="item-picker-option-name">All ingredients</span>
+  </button>`;
+  if (matchingItems.length === 0) {
+    return `${clearOption}<p class="item-picker-empty">Nenhum ingredient encontrado.</p>`;
+  }
+  return clearOption + matchingItems.map((item) => {
+    const imagePath = itemImages[item.id];
+    return `<button class="item-picker-option" type="button" data-select-item="${escapeHtml(item.id)}">
+      ${imagePath
+        ? `<img src="${imagePath}" alt="" loading="lazy" decoding="async">`
+        : '<span class="item-picker-image-placeholder" aria-hidden="true">?</span>'}
+      <span class="item-picker-option-name">${escapeHtml(item.name)}</span>
+    </button>`;
+  }).join("");
+}
+
+function getPendingSyntheses(): typeof syntheses {
+  return syntheses.filter((recipe) =>
+    recipe.resultSlimeId === null ||
+    recipe.ingredientStatus === "required-undiscovered" ||
+    recipe.minimumMainLevel !== null,
+  );
+}
+
+function renderPendingSyntheses(): string {
+  const pendingRecipes = getPendingSyntheses();
+  if (pendingRecipes.length === 0) {
+    return '<div class="section-empty"><strong>Nenhuma síntese pendente registrada</strong><p>Este espaço será preenchido quando houver combinações confirmadas que aguardam a descoberta do ingrediente ou o level mínimo necessário.</p></div>';
   }
 
-  return syntheses.map((recipe) => {
+  return pendingRecipes.map((recipe) => {
     const level = formatRecipeLevel(recipe);
-    const itemNames = escapeHtml(getSynthesisIngredientsLabel(recipe.ingredients));
+    const itemNames = escapeHtml(getSynthesisIngredientsLabel(recipe.ingredients, recipe.ingredientStatus));
+    const result = recipe.resultSlimeId === null
+      ? '<span class="recipe-result recipe-result-unknown">Resultado não descoberto</span>'
+      : `<span class="recipe-result">${renderSlimeLink(recipe.resultSlimeId)}</span>`;
     return `
       <article class="recipe-card">
         <div class="recipe-combination">
@@ -629,7 +712,7 @@ function renderKnownSyntheses(): string {
           <span class="recipe-plus" aria-hidden="true">+</span>
           <span class="recipe-slime">${renderSlimeLink(recipe.subSlimeId)} <small>Sub slime</small></span>
           <span class="recipe-arrow" aria-hidden="true">→</span>
-          <span class="recipe-result">${renderSlimeLink(recipe.resultSlimeId)}</span>
+          ${result}
         </div>
         <div class="recipe-meta"><span>${escapeHtml(level)}</span><span>${itemNames}</span></div>
       </article>
@@ -652,8 +735,6 @@ function renderSynthesisResults(): void {
   const level = levelValue ? Number(levelValue) : null;
 
   const selectedRange = level === null ? null : getSynthesisLevelRange(level);
-  const itemSelect = sectionScreen.querySelector<HTMLSelectElement>("#synthesis-item");
-  selectedSynthesisItem = (itemSelect?.value as ItemId | undefined) || null;
   const hasSelection = mainSlimeId !== null || subSlimeId !== null || levelValue.length > 0 || selectedSynthesisItem !== null;
   if (levelValue.length > 0 && selectedRange === null) {
     results.innerHTML = `<div class="simulator-empty">Informe um level inteiro igual ou superior a ${SYNTHESIS_LEVEL_MIN}.</div>`;
@@ -668,7 +749,8 @@ function renderSynthesisResults(): void {
     const mainEligible = mainSlimeId === null || recipe.mainSlimeId === mainSlimeId;
     const subEligible = subSlimeId === null || recipe.subSlimeId === subSlimeId;
     const recipeRange = recipe.requiredLevel === null ? null : getSynthesisLevelRange(recipe.requiredLevel);
-    const levelEligible = selectedRange === null || recipe.requiredLevel === null ||
+    const levelEligible = recipe.minimumMainLevel !== null ||
+      selectedRange === null || recipe.requiredLevel === null ||
       (recipeRange !== null && recipeRange.min === selectedRange.min && recipeRange.max === selectedRange.max);
     const itemsEligible = selectedSynthesisItem === null ||
       recipe.ingredients === null ||
@@ -685,8 +767,10 @@ function renderSynthesisResults(): void {
     <p class="simulator-result-count">${recipes.length} combinação${recipes.length === 1 ? "" : "ões"} conhecida${recipes.length === 1 ? "" : "s"}${selectedRange ? ` · Lv. ${selectedRange.min}–${selectedRange.max}` : ""}</p>
     <div class="simulator-result-list">
     ${recipes.map((recipe) => {
-      const resultSlime = slimesById.get(recipe.resultSlimeId);
-      if (!resultSlime) {
+      const resultSlime = recipe.resultSlimeId === null
+        ? null
+        : slimesById.get(recipe.resultSlimeId);
+      if (recipe.resultSlimeId !== null && !resultSlime) {
         throw new Error(`Síntese referencia slime inexistente: #${recipe.resultSlimeId}`);
       }
       const mainSlime = slimesById.get(recipe.mainSlimeId);
@@ -696,13 +780,19 @@ function renderSynthesisResults(): void {
       }
       const levelNote = formatRecipeLevel(recipe);
       const mainLevelNote = level === null ? "Level do Main slime não informado" : `Main slime Lv. ${level}`;
-      const itemNote = escapeHtml(getSynthesisIngredientsLabel(recipe.ingredients));
+      const itemNote = escapeHtml(getSynthesisIngredientsLabel(recipe.ingredients, recipe.ingredientStatus));
+      const minimumLevelWarning = recipe.minimumMainLevel !== null && level !== null && level < recipe.minimumMainLevel
+        ? `<span class="simulator-result-warning">O Main slime precisa alcançar o level mínimo ${recipe.minimumMainLevel} antes de tentar esta síntese.</span>`
+        : "";
       return `<article class="simulator-result">
-        <div class="simulator-result-slime">${renderSlimeAvatar(resultSlime, "simulator-avatar")}<div><a href="#slime/${resultSlime.id}">${escapeHtml(resultSlime.name ?? `Slime #${String(resultSlime.id).padStart(3, "0")}`)}</a><span class="simulator-result-number">#${String(resultSlime.id).padStart(3, "0")}</span></div></div>
+        ${resultSlime
+          ? `<div class="simulator-result-slime">${renderSlimeAvatar(resultSlime, "simulator-avatar")}<div><a href="#slime/${resultSlime.id}">${escapeHtml(resultSlime.name ?? `Slime #${String(resultSlime.id).padStart(3, "0")}`)}</a><span class="simulator-result-number">#${String(resultSlime.id).padStart(3, "0")}</span></div></div>`
+          : '<div class="simulator-result-slime simulator-result-unknown"><span class="synthesis-result-placeholder" aria-hidden="true">?</span><strong>Resultado não descoberto</strong></div>'}
         <div class="simulator-result-meta">
           <span><strong>Main slime:</strong> ${escapeHtml(mainSlime.name ?? `Slime #${String(mainSlime.id).padStart(3, "0")}`)} · ${escapeHtml(mainLevelNote)}</span>
-          <span><strong>Sub slime:</strong> ${escapeHtml(subSlime.name ?? `Slime #${String(subSlime.id).padStart(3, "0")}`)} · level abaixo do Main slime</span>
+          <span><strong>Sub slime:</strong> ${escapeHtml(subSlime.name ?? `Slime #${String(subSlime.id).padStart(3, "0")}`)}</span>
           <span><strong>Ingredients:</strong> ${itemNote} · ${escapeHtml(levelNote)}</span>
+          ${minimumLevelWarning}
         </div>
       </article>`;
     }).join("")}
@@ -713,11 +803,6 @@ function renderSynthesisResults(): void {
 
 function renderSynthesisPage(): void {
   selectedSynthesisItem = null;
-  const itemOptions = items.map((item) =>
-    item.type === "Byproduct"
-      ? `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`
-      : "",
-  ).join("");
 
   sectionScreen.innerHTML = `
     <section class="section-heading">
@@ -727,14 +812,14 @@ function renderSynthesisPage(): void {
     </section>
     <div class="demo-notice" role="note">
       <span class="notice-icon" aria-hidden="true">i</span>
-      <p><strong>Catálogo em construção.</strong> O simulador mostra apenas resultados presentes nas receitas registradas; resultados ausentes não significam que a combinação seja impossível.</p>
+      <p><strong>Catálogo em construção.</strong> O simulador mostra combinações registradas, mesmo quando o resultado ainda é desconhecido; combinações ausentes do catálogo ainda podem ser possíveis.</p>
     </div>
     <section class="synthesis-simulator" aria-labelledby="simulator-heading">
       <div class="section-subheading">
         <div><p class="eyebrow"><span class="eyebrow-line"></span> MODO DE EXPERIMENTAÇÃO</p><h2 id="simulator-heading">Simulador de síntese</h2></div>
         <span class="mockup-badge">INTERATIVO</span>
       </div>
-      <p class="simulator-intro">Escolha o Main slime e o Sub slime. O level informado pertence ao Main slime; o Sub slime precisa estar em um level menor.</p>
+      <p class="simulator-intro">Escolha o Main slime e o Sub slime. O level informado pertence ao Main slime.</p>
       <div class="simulator-form">
         <div class="simulator-slot">
           <span class="field-label">Main slime</span>
@@ -748,25 +833,44 @@ function renderSynthesisPage(): void {
           <span class="field-label">Sub slime</span>
           <div class="simulator-slime-picker" id="synthesis-sub-picker" data-selected-id="">
             <button class="slime-picker-trigger" type="button" data-toggle-slime-picker aria-expanded="false"><span class="slime-picker-current"><span class="selection-placeholder">Select Sub slime</span></span><span class="select-chevron" aria-hidden="true">⌄</span></button>
-            <div class="slime-picker-menu" hidden><label class="sr-only" for="synthesis-sub-search">Search Sub slime</label><input class="slime-picker-search" id="synthesis-sub-search" type="search" placeholder="Search slime..." autocomplete="off" /><div class="slime-picker-options">${renderSlimePickerOptions()}</div></div>
+            <div class="slime-picker-menu" hidden>
+              <label class="sr-only" for="synthesis-sub-search">Search Sub slime</label>
+              <input class="slime-picker-search" id="synthesis-sub-search" type="search" placeholder="Search slime..." autocomplete="off" />
+              <span class="synthesis-picker-legend"><i class="is-known">✓</i> Descoberta <i class="is-unavailable">×</i> Não catalogada <i class="is-undiscovered">?</i> Resultado desconhecido</span>
+              <div class="slime-picker-options">${renderSlimePickerOptions()}</div>
+            </div>
           </div>
         </div>
         <span class="simulator-operator simulator-arrow" aria-hidden="true">→</span>
         <label class="field-label level-field">Main slime level<input id="synthesis-level" type="number" min="${SYNTHESIS_LEVEL_MIN}" step="1" placeholder="4 ou mais" /></label>
-        <label class="field-label item-slot" for="synthesis-item">Ingredients (optional)<select id="synthesis-item"><option value="">No ingredients</option>${itemOptions}</select></label>
+        <div class="field-label item-slot">Ingredients (optional)
+          <div class="simulator-item-picker">
+            <button class="item-picker-trigger" type="button" data-toggle-item-picker aria-expanded="false">
+              <span class="item-picker-current"><span class="selection-placeholder">All ingredients</span></span>
+              <span class="select-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div class="slime-picker-menu item-picker-menu" hidden>
+              <label class="sr-only" for="synthesis-item-search">Search ingredients</label>
+              <input class="slime-picker-search" id="synthesis-item-search" type="search" placeholder="Search ingredient..." autocomplete="off" />
+              <div class="item-picker-options">${renderItemPickerOptions()}</div>
+            </div>
+          </div>
+        </div>
         <button class="button-secondary simulator-reset" type="button" data-reset-synthesis>↺ Reset</button>
       </div>
       <div class="simulator-results-wrap"><h3>Resultados possíveis</h3><div id="synthesis-results" aria-live="polite"></div></div>
     </section>
-    <section class="known-recipes" aria-labelledby="known-recipes-heading">
+    <section class="known-recipes" aria-labelledby="pending-recipes-heading">
       <div class="section-subheading">
-        <div><p class="eyebrow"><span class="eyebrow-line"></span> RECEITAS REGISTRADAS</p><h2 id="known-recipes-heading">Sínteses conhecidas <span class="heading-count">${syntheses.length}</span></h2></div>
+        <div><p class="eyebrow"><span class="eyebrow-line"></span> DESCOBERTAS DA COMUNIDADE</p><h2 id="pending-recipes-heading">Sínteses a descobrir <span class="heading-count">${getPendingSyntheses().length}</span></h2></div>
       </div>
-      <div class="recipe-list">${renderKnownSyntheses()}</div>
+      <div class="recipe-list">${renderPendingSyntheses()}</div>
     </section>
   `;
 
   const updateSimulator = () => {
+    const mainPicker = sectionScreen.querySelector<HTMLDivElement>("#synthesis-main-picker");
+    const selectedMainId = mainPicker?.dataset.selectedId ? Number(mainPicker.dataset.selectedId) : null;
     sectionScreen.querySelectorAll<HTMLDivElement>(".simulator-slime-picker").forEach((picker) => {
       const selectedId = Number(picker.dataset.selectedId);
       const slime = slimesById.get(selectedId);
@@ -780,6 +884,26 @@ function renderSynthesisPage(): void {
         : `<span class="selection-placeholder">${picker.id === "synthesis-main-picker" ? "Select Main slime" : "Select Sub slime"}</span>`;
       trigger.setAttribute("aria-expanded", String(!picker.querySelector(".slime-picker-menu")?.hasAttribute("hidden")));
     });
+    const subPicker = sectionScreen.querySelector<HTMLDivElement>("#synthesis-sub-picker");
+    const subOptions = subPicker?.querySelector<HTMLDivElement>(".slime-picker-options");
+    const subSearch = subPicker?.querySelector<HTMLInputElement>(".slime-picker-search");
+    if (subOptions) {
+      subOptions.innerHTML = renderSlimePickerOptions(subSearch?.value ?? "", selectedMainId);
+    }
+    const itemPicker = sectionScreen.querySelector<HTMLDivElement>(".simulator-item-picker");
+    const itemCurrent = itemPicker?.querySelector<HTMLSpanElement>(".item-picker-current");
+    const itemTrigger = itemPicker?.querySelector<HTMLButtonElement>(".item-picker-trigger");
+    const selectedItem = selectedSynthesisItem === null
+      ? null
+      : itemsById.get(selectedSynthesisItem);
+    if (itemCurrent && itemTrigger) {
+      itemCurrent.innerHTML = selectedItem
+        ? `<span class="item-picker-selected">${itemImages[selectedItem.id]
+          ? `<img src="${itemImages[selectedItem.id]}" alt="" loading="lazy" decoding="async">`
+          : '<span class="item-picker-image-placeholder" aria-hidden="true">?</span>'}<span>${escapeHtml(selectedItem.name)}</span></span>`
+        : '<span class="selection-placeholder">All ingredients</span>';
+      itemTrigger.setAttribute("aria-expanded", String(!itemPicker?.querySelector(".item-picker-menu")?.hasAttribute("hidden")));
+    }
     renderSynthesisResults();
   };
 
@@ -788,9 +912,6 @@ function renderSynthesisPage(): void {
     throw new Error("Não foi possível inicializar o simulador de síntese.");
   }
   simulator.querySelector<HTMLInputElement>("#synthesis-level")?.addEventListener("input", updateSimulator);
-  simulator.querySelector<HTMLSelectElement>("#synthesis-item")?.addEventListener("change", () => {
-    updateSimulator();
-  });
   simulator.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLElement)) {
@@ -811,14 +932,60 @@ function renderSynthesisPage(): void {
         }
       });
       const levelInput = simulator.querySelector<HTMLInputElement>("#synthesis-level");
-      const itemSelect = simulator.querySelector<HTMLSelectElement>("#synthesis-item");
       if (levelInput) {
         levelInput.value = "";
       }
-      if (itemSelect) {
-        itemSelect.value = "";
-      }
       selectedSynthesisItem = null;
+      const itemSearch = simulator.querySelector<HTMLInputElement>("#synthesis-item-search");
+      const itemOptions = simulator.querySelector<HTMLDivElement>(".item-picker-options");
+      if (itemSearch) {
+        itemSearch.value = "";
+      }
+      if (itemOptions) {
+        itemOptions.innerHTML = renderItemPickerOptions();
+      }
+      simulator.querySelector<HTMLDivElement>(".item-picker-menu")?.setAttribute("hidden", "");
+      updateSimulator();
+      return;
+    }
+    const itemToggle = target.closest<HTMLButtonElement>("[data-toggle-item-picker]");
+    if (itemToggle) {
+      const menu = itemToggle.closest(".simulator-item-picker")?.querySelector<HTMLDivElement>(".item-picker-menu");
+      if (menu) {
+        const shouldOpen = menu.hasAttribute("hidden");
+        simulator.querySelectorAll<HTMLDivElement>(".slime-picker-menu").forEach((otherMenu) => {
+          otherMenu.setAttribute("hidden", "");
+          otherMenu.closest(".simulator-slime-picker")?.querySelector<HTMLButtonElement>("[data-toggle-slime-picker]")?.setAttribute("aria-expanded", "false");
+          otherMenu.closest(".simulator-item-picker")?.querySelector<HTMLButtonElement>("[data-toggle-item-picker]")?.setAttribute("aria-expanded", "false");
+        });
+        if (shouldOpen) {
+          menu.removeAttribute("hidden");
+          itemToggle.setAttribute("aria-expanded", "true");
+          menu.querySelector<HTMLInputElement>(".slime-picker-search")?.focus();
+        }
+      }
+      return;
+    }
+    const itemOption = target.closest<HTMLButtonElement>("[data-select-item]");
+    const clearItem = target.closest<HTMLButtonElement>("[data-clear-item]");
+    if (clearItem) {
+      selectedSynthesisItem = null;
+      simulator.querySelector<HTMLDivElement>(".item-picker-menu")?.setAttribute("hidden", "");
+      simulator.querySelector<HTMLButtonElement>("[data-toggle-item-picker]")?.setAttribute("aria-expanded", "false");
+      simulator.querySelector<HTMLButtonElement>("[data-toggle-item-picker]")?.focus();
+      updateSimulator();
+      return;
+    }
+    if (itemOption) {
+      const itemId = itemOption.dataset.selectItem;
+      const item = items.find((candidate) => candidate.id === itemId);
+      if (!item) {
+        throw new Error(`Ingredient selecionado não cadastrado: ${itemId ?? ""}`);
+      }
+      selectedSynthesisItem = item.id;
+      simulator.querySelector<HTMLDivElement>(".item-picker-menu")?.setAttribute("hidden", "");
+      simulator.querySelector<HTMLButtonElement>("[data-toggle-item-picker]")?.setAttribute("aria-expanded", "false");
+      simulator.querySelector<HTMLButtonElement>("[data-toggle-item-picker]")?.focus();
       updateSimulator();
       return;
     }
@@ -831,6 +998,7 @@ function renderSynthesisPage(): void {
         simulator.querySelectorAll<HTMLDivElement>(".slime-picker-menu").forEach((otherMenu) => {
           otherMenu.setAttribute("hidden", "");
           otherMenu.closest(".simulator-slime-picker")?.querySelector("button[data-toggle-slime-picker]")?.setAttribute("aria-expanded", "false");
+          otherMenu.closest(".simulator-item-picker")?.querySelector("button[data-toggle-item-picker]")?.setAttribute("aria-expanded", "false");
         });
         if (shouldOpen) {
           menu.removeAttribute("hidden");
@@ -861,10 +1029,11 @@ function renderSynthesisPage(): void {
       updateSimulator();
       return;
     }
-    if (!target.closest(".simulator-slime-picker")) {
+    if (!target.closest(".simulator-slime-picker, .simulator-item-picker")) {
       simulator.querySelectorAll<HTMLDivElement>(".slime-picker-menu").forEach((menu) => {
         menu.setAttribute("hidden", "");
         menu.closest(".simulator-slime-picker")?.querySelector("button[data-toggle-slime-picker]")?.setAttribute("aria-expanded", "false");
+        menu.closest(".simulator-item-picker")?.querySelector("button[data-toggle-item-picker]")?.setAttribute("aria-expanded", "false");
       });
     }
   });
@@ -875,6 +1044,7 @@ function renderSynthesisPage(): void {
     simulator.querySelectorAll<HTMLDivElement>(".slime-picker-menu").forEach((menu) => {
       menu.setAttribute("hidden", "");
       menu.closest(".simulator-slime-picker")?.querySelector("button[data-toggle-slime-picker]")?.setAttribute("aria-expanded", "false");
+      menu.closest(".simulator-item-picker")?.querySelector("button[data-toggle-item-picker]")?.setAttribute("aria-expanded", "false");
     });
   });
   simulator.addEventListener("input", (event) => {
@@ -882,10 +1052,21 @@ function renderSynthesisPage(): void {
     if (!(target instanceof HTMLInputElement) || !target.matches(".slime-picker-search")) {
       return;
     }
+    const itemPicker = target.closest<HTMLDivElement>(".simulator-item-picker");
+    const itemOptions = itemPicker?.querySelector<HTMLDivElement>(".item-picker-options");
+    if (itemOptions) {
+      itemOptions.innerHTML = renderItemPickerOptions(target.value);
+      return;
+    }
     const picker = target.closest<HTMLDivElement>(".simulator-slime-picker");
     const options = picker?.querySelector<HTMLDivElement>(".slime-picker-options");
     if (options) {
-      options.innerHTML = renderSlimePickerOptions(target.value);
+      const mainPicker = sectionScreen.querySelector<HTMLDivElement>("#synthesis-main-picker");
+      const selectedMainId = mainPicker?.dataset.selectedId ? Number(mainPicker.dataset.selectedId) : null;
+      options.innerHTML = renderSlimePickerOptions(
+        target.value,
+        picker?.id === "synthesis-sub-picker" ? selectedMainId : null,
+      );
     }
   });
   updateSimulator();

@@ -4,24 +4,29 @@ export type SynthesisRecipe = {
   id: string;
   /** Slime whose level determines the synthesis range. */
   mainSlimeId: number;
-  /** Sub slime consumed by synthesis; its level must be lower than the main slime's. */
+  /** Sub slime consumed by synthesis. */
   subSlimeId: number;
   requiredLevel: number | null;
+  minimumMainLevel: number | null;
   ingredients: ItemId[] | null;
-  resultSlimeId: number;
+  ingredientStatus: "known" | "undetermined" | "required-undiscovered";
+  resultSlimeId: number | null;
   successChance: number | null;
 };
 
 type SynthesisRow = readonly [
   id: string,
-  resultSlimeId: number,
+  resultSlimeId: number | null,
   requiredLevel: number | null,
   mainSlimeId: number,
   subSlimeId: number,
   ingredients: ItemId[] | null,
   successChance: number | null,
+  ingredientStatus?: "undetermined" | "required-undiscovered",
+  minimumMainLevel?: number,
 ];
 
+// Optional tuple values after successChance are ingredientStatus and minimumMainLevel.
 const synthesisRows: SynthesisRow[] = [
   ["006016003003n", 6, 16, 3, 3, [], null],
   ["018007026026n", 18, 7, 26, 26, ["tweety-hide", "tricky-hide", "icy-hide"], null],
@@ -193,8 +198,7 @@ const synthesisRows: SynthesisRow[] = [
   ["115031057063ring", 115, 31, 70, 64, ["ladif-ring"], null],
 ];
 
-export const syntheses: SynthesisRecipe[] = synthesisRows.map(
-  ([id, resultSlimeId, requiredLevel, mainSlimeId, subSlimeId, ingredients, successChance]) => ({
+export const syntheses: SynthesisRecipe[] = synthesisRows.map(([
     id,
     resultSlimeId,
     requiredLevel,
@@ -202,5 +206,34 @@ export const syntheses: SynthesisRecipe[] = synthesisRows.map(
     subSlimeId,
     ingredients,
     successChance,
-  }),
+    ingredientStatus,
+    minimumMainLevel,
+  ]) => {
+    if (resultSlimeId === null && minimumMainLevel === undefined) {
+      throw new Error(`Síntese "${id}" sem o level mínimo conhecido do Main slime.`);
+    }
+    if (ingredientStatus !== undefined && ingredients !== null) {
+      throw new Error(`Síntese "${id}" não pode definir ingredientStatus com ingredients conhecidos.`);
+    }
+    if (ingredientStatus === "required-undiscovered" && minimumMainLevel === undefined) {
+      throw new Error(`Síntese "${id}" precisa do level mínimo para marcar o ingredient não descoberto.`);
+    }
+    if (
+      minimumMainLevel !== undefined &&
+      (!Number.isInteger(minimumMainLevel) || minimumMainLevel < 1)
+    ) {
+      throw new Error(`Síntese "${id}" tem um level mínimo inválido.`);
+    }
+    return {
+      id,
+      resultSlimeId,
+      requiredLevel,
+      minimumMainLevel: minimumMainLevel ?? null,
+      mainSlimeId,
+      subSlimeId,
+      ingredients,
+      ingredientStatus: ingredients !== null ? "known" : ingredientStatus ?? "undetermined",
+      successChance,
+    };
+  },
 );
