@@ -196,6 +196,7 @@ const synthesisRows: SynthesisRow[] = [
   ["108031061070sigil", 108, 31, 61, 70, ["wisp-sigil", "thunder-wisp-sigil", "stella-sigil"], null],
   ["115031057063", 115, 31, 57, 63, [], null],
   ["115031057063ring", 115, 31, 70, 64, ["ladif-ring"], null],
+  ["null", null, null, 107, 62, null, null,"undetermined", 34],
 ];
 
 export const syntheses: SynthesisRecipe[] = synthesisRows.map(([
