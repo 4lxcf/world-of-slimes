@@ -98,7 +98,7 @@ export const slimes: Slime[] = [
       { locationId: "cave-2", levelRange: null, timeOfDay: "Both" },
       { locationId: "cave-3", levelRange: { min: 21, max: 24 }, timeOfDay: "Both" },
       { locationId: "hidden-shore-3", levelRange: null, timeOfDay: "Both" },
-      { locationId: "hidden-shore-4", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-shore-4", levelRange: { min: 16, max: 17}, timeOfDay: "Both" },
       { locationId: "hidden-shore-5", levelRange: null, timeOfDay: "Both" },
       { locationId: "cave-1", levelRange: {min: 20, max: 22}, timeOfDay: "Both" }
     ],
@@ -623,7 +623,7 @@ export const slimes: Slime[] = [
     type1: "ground",
     type2: null,
     locations: [
-      { locationId: "noecheon-mountain-3", levelRange: {min: 11, max: 12}, timeOfDay: "Night" },
+      { locationId: "noecheon-mountain-3", levelRange: {min: 11, max: 13}, timeOfDay: "Both" },
     ],
     traits: ["mining"],
     skills: null,
@@ -649,9 +649,9 @@ export const slimes: Slime[] = [
     type1: "electric",
     type2: null,
     locations: [
-      { locationId: "noecheon-mountain-3", levelRange: {min: 13, max: 13}, timeOfDay: "Night" },
+      { locationId: "noecheon-mountain-3", levelRange: {min: 13, max: 13}, timeOfDay: "Both" },
       { locationId: "noecheon-mountain-2", levelRange: {min: 13, max: 14}, timeOfDay: "Both" },
-      { locationId: "noecheon-mountain-4", levelRange: {min: 13, max: 14}, timeOfDay: "Night" },
+      { locationId: "noecheon-mountain-4", levelRange: {min: 13, max: 14}, timeOfDay: "Both" },
     ],
     traits: ["luminescence"],
     skills: ["electric-orb"],
@@ -680,12 +680,12 @@ export const slimes: Slime[] = [
     type1: "grass",
     type2: "ground",
     locations: [
-      { locationId: "hidden-coast-1", levelRange: null, timeOfDay: "Both" },
-      { locationId: "hidden-coast-2", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-shore-1", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-shore-2", levelRange: { min: 13, max: 15 }, timeOfDay: "Both" },
     ],
     traits: ["bond"],
     skills: ["leaf-boomerang", "leaf-spread"],
-    drops: ["small-slime-fragment", "melon-tentacle"],
+    drops: ["small-slime-fragment", "melon-tentacle", "verdant-core-fragment"],
     synthesis: null,
   },
   {
@@ -695,14 +695,14 @@ export const slimes: Slime[] = [
     type1: "grass",
     type2: "water",
     locations: [
-      { locationId: "hidden-coast-2", levelRange: null, timeOfDay: "Both" },
-      { locationId: "hidden-coast-3", levelRange: null, timeOfDay: "Both" },
-      { locationId: "hidden-coast-4", levelRange: null, timeOfDay: "Both" },
-      { locationId: "hidden-coast-5", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-shore-2", levelRange: { min: 15, max: 15 }, timeOfDay: "Both" },
+      { locationId: "hidden-shore-3", levelRange: null, timeOfDay: "Both" },
+      { locationId: "hidden-shore-4", levelRange: { min: 15, max: 17 }, timeOfDay: "Both" },
+      { locationId: "hidden-shore-5", levelRange: null, timeOfDay: "Both" },
     ],
     traits: ["bond"],
     skills: ["water-ball", "leaf-spread"],
-    drops: ["small-slime-fragment", "aqua-melon-tentacle"],
+    drops: ["small-slime-fragment", "aqua-melon-tentacle", "verdant-core-fragment"],
     synthesis: null,
   },
   {
@@ -712,7 +712,7 @@ export const slimes: Slime[] = [
     type1: "grass",
     type2: "poison",
     locations: [
-      { locationId: "hidden-coast-5", levelRange: null, timeOfDay: "Night" },
+      { locationId: "hidden-shore-5", levelRange: null, timeOfDay: "Night" },
     ],
     traits: ["bond"],
     skills: ["poison-ball", "leaf-boomerang", "leaf-spread"],
@@ -768,7 +768,7 @@ export const slimes: Slime[] = [
     type1: "wind",
     type2: null,
     locations: [
-      { locationId: "noecheon-mountain-4", levelRange: {min: 12, max: 13}, timeOfDay: "Night" },
+      { locationId: "noecheon-mountain-4", levelRange: {min: 12, max: 14}, timeOfDay: "Both" },
       { locationId: "noecheon-mountain-5", levelRange: {min: 13, max: 15}, timeOfDay: "Both" },
     ],
     traits: null,
