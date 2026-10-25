@@ -480,7 +480,6 @@ function renderDetailSynthesisRecipe(
     const itemName = item?.name ?? (noIngredient ? "No ingredients" : "Ingredient not confirmed");
     return `<div class="synthesis-ingredient-option">
       <div class="synthesis-ingredient-part">
-        <span class="synthesis-part-role">INGREDIENTE</span>
         ${imagePath
           ? `<img class="synthesis-item-avatar" src="${imagePath}" alt="" loading="lazy" decoding="async">`
           : itemId !== null
