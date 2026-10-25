@@ -396,20 +396,38 @@ function renderDetailSynthesis(slime: Slime): string {
       heading: string,
       recipes: typeof syntheses,
       isParticipationGroup: boolean,
-    ) => recipes.length === 0 ? "" : `
+    ) => {
+      const groupedRecipeIndexes = new Map<string, number[]>();
+      recipes.forEach((recipe) => {
+        const pair = [recipe.mainSlimeId, recipe.subSlimeId].sort((a, b) => a - b);
+        const key = JSON.stringify([pair[0], pair[1], recipe.resultSlimeId, recipe.requiredLevel]);
+        const indexes = groupedRecipeIndexes.get(key) ?? [];
+        indexes.push(syntheses.indexOf(recipe));
+        groupedRecipeIndexes.set(key, indexes);
+      });
+      if (recipes.length === 0) {
+        return "";
+      }
+
+      const recipeGroups = [...groupedRecipeIndexes.values()];
+      return `
       <section class="detail-synthesis-group">
         <h3 class="detail-synthesis-group-heading">
           <span>${heading}</span>
-          <span class="detail-synthesis-group-count">${recipes.length}</span>
+          <span class="detail-synthesis-group-count">${recipeGroups.length}</span>
         </h3>
-        <div class="detail-synthesis-list">${recipes.map((recipe) => {
-          const recipeIndex = syntheses.indexOf(recipe);
+        <div class="detail-synthesis-list">${recipeGroups.map((recipeIndexes) => {
+          const recipe = syntheses[recipeIndexes[0] ?? -1];
+          if (!recipe) {
+            throw new Error("Não foi possível encontrar a receita de síntese.");
+          }
           const shouldReverse = isParticipationGroup
             ? recipe.subSlimeId === slime.id
             : recipe.mainSlimeId > recipe.subSlimeId;
-          return renderDetailSynthesisRecipe(recipe, recipeIndex, shouldReverse);
+          return renderDetailSynthesisRecipe(recipeIndexes, shouldReverse);
         }).join("")}</div>
       </section>`;
+    };
     return `<p class="synthesis-intro">Combinações conhecidas para ${escapeHtml(slime.name ?? `Slime #${String(slime.id).padStart(3, "0")}`)}.</p>
       ${renderRecipeGroup("Participa como Main ou Sub slime", participationRecipes, true)}
       ${renderRecipeGroup("Obtido como resultado", resultRecipes, false)}`;
@@ -425,21 +443,16 @@ function renderDetailSynthesis(slime: Slime): string {
 }
 
 function renderDetailSynthesisRecipe(
-  recipe: (typeof syntheses)[number],
-  recipeIndex: number,
+  recipeIndexes: number[],
   reversed: boolean,
 ): string {
+  const recipes = recipeIndexes.map((index) => syntheses[index]);
+  const recipe = recipes[0];
+  if (!recipe) {
+    throw new Error("Não foi possível encontrar a receita de síntese.");
+  }
   const mainSlimeId = reversed ? recipe.subSlimeId : recipe.mainSlimeId;
   const subSlimeId = reversed ? recipe.mainSlimeId : recipe.subSlimeId;
-  const displayedRecipe = reversed
-    ? syntheses.find((candidate) =>
-        candidate.mainSlimeId === mainSlimeId &&
-        candidate.subSlimeId === subSlimeId &&
-        candidate.resultSlimeId === recipe.resultSlimeId &&
-        candidate.requiredLevel === recipe.requiredLevel &&
-        JSON.stringify(candidate.ingredients) === JSON.stringify(recipe.ingredients),
-      )
-    : recipe;
   const renderRecipeSlime = (slimeId: number, role: string) => {
     const recipeSlime = slimesById.get(slimeId);
     if (!recipeSlime) {
@@ -454,27 +467,67 @@ function renderDetailSynthesisRecipe(
     </div>`;
   };
   const level = formatRecipeLevel(recipe);
-  const ingredients = getSynthesisIngredientsLabel(recipe.ingredients);
-  const chance = displayedRecipe?.successChance;
-  const chanceLabel = chance == null ? "—%" : `${chance}%`;
-  const chanceDescription = chance == null
-    ? "Chance não informada para esta ordem"
-    : `Chance de sucesso: ${chanceLabel}`;
-
-  return `<article class="detail-synthesis-recipe" data-recipe-index="${recipeIndex}" data-reversed="${reversed}">
-    <div class="synthesis-flow">
-      ${renderRecipeSlime(mainSlimeId, "MAIN SLIME")}
-      <button class="synthesis-operator synthesis-reverse" type="button" data-reverse-detail-recipe aria-label="Inverter Main slime e Sub slime" title="Inverter Main slime e Sub slime">⇄</button>
-      ${renderRecipeSlime(subSlimeId, "SUB SLIME")}
+  const renderIngredient = (itemId: ItemId | null, chance: number | null, noIngredient = false) => {
+    const item = itemId === null ? null : itemsById.get(itemId);
+    if (itemId !== null && !item) {
+      throw new Error(`Item não cadastrado na receita: ${itemId}`);
+    }
+    const chanceLabel = chance == null ? "—%" : `${chance}%`;
+    const chanceDescription = chance == null
+      ? "Chance não informada para esta ordem"
+      : `Chance de sucesso: ${chanceLabel}`;
+    const imagePath = itemId === null ? undefined : itemImages[itemId];
+    const itemName = item?.name ?? (noIngredient ? "No ingredients" : "Ingredient not confirmed");
+    return `<div class="synthesis-ingredient-option">
+      <div class="synthesis-ingredient-part">
+        <span class="synthesis-part-role">INGREDIENTE</span>
+        ${imagePath
+          ? `<img class="synthesis-item-avatar" src="${imagePath}" alt="" loading="lazy" decoding="async">`
+          : itemId !== null
+            ? '<span class="synthesis-item-avatar synthesis-item-placeholder" aria-hidden="true">?</span>'
+            : ""}
+        <strong class="synthesis-item-name">${escapeHtml(itemName)}</strong>
+      </div>
       <div class="synthesis-result-flow">
         <span class="synthesis-chance" aria-label="${escapeHtml(chanceDescription)}">${escapeHtml(chanceLabel)}</span>
         <span class="synthesis-operator synthesis-arrow" aria-label="produz">→</span>
       </div>
+    </div>`;
+  };
+  const ingredientOptions = recipes.flatMap((candidate) => {
+    const displayedRecipe = reversed
+      ? syntheses.find((entry) =>
+          entry.mainSlimeId === mainSlimeId &&
+          entry.subSlimeId === subSlimeId &&
+          entry.resultSlimeId === candidate.resultSlimeId &&
+          entry.requiredLevel === candidate.requiredLevel &&
+          JSON.stringify(entry.ingredients) === JSON.stringify(candidate.ingredients),
+        )
+      : candidate;
+    const chance = displayedRecipe?.successChance ?? null;
+    const ingredientIds = candidate.ingredients;
+    if (ingredientIds === null) {
+      return [renderIngredient(null, chance)];
+    }
+    if (ingredientIds.length === 0) {
+      return [renderIngredient(null, chance, true)];
+    }
+    return ingredientIds.map((itemId) =>
+      renderIngredient(itemId, chance),
+    );
+  }).join("");
+
+  return `<article class="detail-synthesis-recipe" data-recipe-indices="${recipeIndexes.join(",")}" data-reversed="${reversed}">
+    <div class="synthesis-flow">
+      ${renderRecipeSlime(mainSlimeId, "MAIN SLIME")}
+      <button class="synthesis-operator synthesis-reverse" type="button" data-reverse-detail-recipe aria-label="Inverter Main slime e Sub slime" title="Inverter Main slime e Sub slime">⇄</button>
+      ${renderRecipeSlime(subSlimeId, "SUB SLIME")}
+      <span class="synthesis-operator synthesis-add" aria-hidden="true">+</span>
+      <div class="synthesis-ingredient-options">${ingredientOptions}</div>
       ${renderRecipeSlime(recipe.resultSlimeId, "RESULTADO")}
     </div>
     <div class="synthesis-recipe-meta">
       <span class="synthesis-meta-item"><span>LEVEL</span><strong>${escapeHtml(level)}</strong></span>
-      <span class="synthesis-meta-item synthesis-ingredient"><span>INGREDIENTE</span><strong>${escapeHtml(ingredients)}</strong></span>
     </div>
   </article>`;
 }
@@ -1026,12 +1079,11 @@ detailScreen.addEventListener("click", (event) => {
   const reverseButton = target.closest<HTMLButtonElement>("[data-reverse-detail-recipe]");
   if (reverseButton) {
     const article = reverseButton.closest<HTMLElement>(".detail-synthesis-recipe");
-    const recipeIndex = Number(article?.dataset.recipeIndex);
-    const recipe = syntheses[recipeIndex];
-    if (!article || !recipe) {
+    const recipeIndexes = article?.dataset.recipeIndices?.split(",").map(Number) ?? [];
+    if (!article || recipeIndexes.length === 0 || recipeIndexes.some((index) => !syntheses[index])) {
       throw new Error("Não foi possível inverter a receita de síntese.");
     }
-    article.outerHTML = renderDetailSynthesisRecipe(recipe, recipeIndex, article.dataset.reversed !== "true");
+    article.outerHTML = renderDetailSynthesisRecipe(recipeIndexes, article.dataset.reversed !== "true");
     return;
   }
   const link = target.closest<HTMLAnchorElement>("a[data-detail-scroll]");
