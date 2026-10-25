@@ -342,7 +342,7 @@ export const items = [
     name: "Noecheon Warp Scroll",
     type: "Consumable",
     description:
-      "A scroll that lets you instantly travel to Noecheon.",
+      "A scroll that lets you instantly travel to Noecheon. Can only be used near the village.",
   },
   {
     id: "xp-boost",

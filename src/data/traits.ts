@@ -34,8 +34,8 @@ export const traits = [
       "Psychic communication with plants and some vegetation obstacles.",
   },
   {
-    id: "shield",
-    name: "Shield",
+    id: "ironclad",
+    name: "Ironclad",
     description: "Grants extra protection in battle.",
   },
 ] as const;
