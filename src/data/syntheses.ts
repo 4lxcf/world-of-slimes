@@ -175,7 +175,6 @@ const synthesisRows: SynthesisRow[] = [
   ["061019054050crystal", 61, 19, 54, 50, ["kobolds-crystal"], null],
   ["062019036016feather", 62, 19, 36, 16, ["fried-feather"], 97.97],
   ["062022020060n", 62, 22, 20, 60, [], null],
-  ["062022049037feather", 62, 22, 49, 37, ["fluffy-feather"], null],
   ["062022060036n", 62, 22, 59, 36, ["fluffy-feather"], 100.00],
   ["062022060036n", 62, 22, 60, 36, [], null],
   ["062022060036n", 62, 25, 59, 37, [], null],
