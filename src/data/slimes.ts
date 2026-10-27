@@ -15,7 +15,6 @@ export type Slime = {
   skills: SkillId[] | null;
   drops: ItemId[] | null;
   dropRates?: Partial<Record<ItemId, number | null>>;
-  synthesis: "unknown" | "unavailable" | null;
 };
 
 export type SlimeTraits = [] | [TraitId] | [TraitId, TraitId];
@@ -42,7 +41,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: "unknown",
   },
   {
     id: 2,
@@ -70,7 +68,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: "unknown",
     dropRates: {
       "small-slime-fragment": 100,
     }
@@ -85,7 +82,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: "unknown",
   },
   {
     id: 4,
@@ -105,7 +101,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: ["water-ball"],
     drops: ["small-slime-fragment"],
-    synthesis: "unknown",
   },
   {
     id: 5,
@@ -122,7 +117,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: ["leaf-spread", "grass-shot"],
     drops: ["small-slime-fragment"],
-    synthesis: "unavailable",
   },
   {
     id: 6,
@@ -134,7 +128,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 7,
@@ -145,8 +138,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 8,
@@ -157,8 +149,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 9,
@@ -169,8 +160,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 10,
@@ -181,8 +171,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 11,
@@ -193,8 +182,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 12,
@@ -205,8 +193,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 13,
@@ -217,8 +204,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 14,
@@ -229,8 +215,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 15,
@@ -262,8 +247,7 @@ export const slimes: Slime[] = [
     ],
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 16,
@@ -279,7 +263,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: ["wind-ball"],
     drops: ["tweety-hide", "small-slime-fragment", "parched-core-fragment"],
-    synthesis: null,
     dropRates: {
       "tweety-hide": 48.6,
       "small-slime-fragment": 100,
@@ -303,7 +286,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: ["dark-orb", "dark-strike"],
     drops: ["tricky-hide", "small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 18,
@@ -326,7 +308,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: ["striking-power", "power-drive"],
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 19,
@@ -342,7 +323,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: ["ice-ball"],
     drops: ["small-slime-fragment", "icy-hide", "parched-core-fragment"],
-    synthesis: null,
   },
   {
     id: 20,
@@ -354,7 +334,6 @@ export const slimes: Slime[] = [
     traits: ["luminescence", "mining"],
     skills: ["light-orb"],
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 21,
@@ -365,8 +344,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 22,
@@ -385,7 +363,6 @@ export const slimes: Slime[] = [
       "small-slime-fragment",
       "glowing-core-fragment",
     ],
-    synthesis: null,
   },
   {
     id: 23,
@@ -397,7 +374,6 @@ export const slimes: Slime[] = [
     traits: ["luminescence"],
     skills: ["magic-orb", "magic-sonic-boom", "magic-flash", "arcane-light"],
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 24,
@@ -412,7 +388,6 @@ export const slimes: Slime[] = [
     traits: ["swimming"],
     skills: ["water-ball"],
     drops: ["small-slime-fragment", "princes-orb", "dewy-core-fragment"],
-    synthesis: null,
   },
   {
     id: 25,
@@ -426,7 +401,6 @@ export const slimes: Slime[] = [
     traits: ["swimming"],
     skills: ["water-ball"],
     drops: ["small-slime-fragment", "poison-princes-orb", "dewy-core-fragment"],
-    synthesis: null,
   },
   {
     id: 26,
@@ -440,7 +414,6 @@ export const slimes: Slime[] = [
     traits: ["swimming", "ironclad"],
     skills: ["power-swing", "water-ball"],
     drops: ["small-slime-fragment", "shell-solid-fragment", "adamant-core-fragment", "dewy-core-fragment"],
-    synthesis: null,
   },
   {
     id: 27,
@@ -452,7 +425,6 @@ export const slimes: Slime[] = [
     traits: ["swimming", "ironclad"],
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 28,
@@ -461,26 +433,13 @@ export const slimes: Slime[] = [
     type1: "grass",
     type2: null,
     locations: [
-      {
-        locationId: "north-gate",
-        levelRange: { min: 4, max: 6 },
-        timeOfDay: "Both",
-      },
-      {
-        locationId: "abandoned-farmland",
-        levelRange: { min: 5, max: 7 },
-        timeOfDay: "Both",
-      },
-      {
-        locationId: "cave-entrance",
-        levelRange: { min: 6, max: 8 },
-        timeOfDay: "Both",
-      },
+      { locationId: "north-gate", levelRange: { min: 4, max: 6 }, timeOfDay: "Both", },
+      { locationId: "abandoned-farmland", levelRange: { min: 5, max: 7 }, timeOfDay: "Both",},
+      { locationId: "cave-entrance", levelRange: { min: 6, max: 8 }, timeOfDay: "Both", },
     ],
     traits: ["bond"],
     skills: ["grass-shot", "leaf-spread", "grass-needle"],
     drops: ["small-slime-fragment", "mandrake-leaf", "verdant-core-fragment"],
-    synthesis: null,
   },
   {
     id: 29,
@@ -498,7 +457,6 @@ export const slimes: Slime[] = [
     traits: ["bond"],
     skills: ["poison-ball"],
     drops: ["small-slime-fragment", "poison-mandrakes-leaf"],
-    synthesis: null,
   },
   {
     id: 30,
@@ -510,7 +468,6 @@ export const slimes: Slime[] = [
     traits: ["bond"],
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 31,
@@ -526,7 +483,6 @@ export const slimes: Slime[] = [
     traits: ["swimming"],
     skills: null,
     drops: ["small-slime-fragment", "bass-scale", "dewy-core-fragment"],
-    synthesis: null,
   },
   {
     id: 32,
@@ -540,7 +496,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment", "poison-bass-scale"],
-    synthesis: null,
   },
   {
     id: 33,
@@ -551,8 +506,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 34,
@@ -566,7 +520,6 @@ export const slimes: Slime[] = [
     traits: ["luminescence"],
     skills: ["magic-orb"],
     drops: ["small-slime-fragment", "wicked-membrane"],
-    synthesis: null,
   },
   {
     id: 35,
@@ -584,7 +537,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: null,
     drops: ["small-slime-fragment", "kobolds-crystal", "parched-core-fragment"],
-    synthesis: null,
   },
   {
     id: 36,
@@ -600,7 +552,6 @@ export const slimes: Slime[] = [
     traits: ["flight", "luminescence"],
     skills: ["light-orb"],
     drops: ["small-slime-fragment", "wisp-sigil", "glowing-core-fragment"],
-    synthesis: null,
   },
   {
     id: 37,
@@ -614,7 +565,6 @@ export const slimes: Slime[] = [
     traits: ["luminescence"],
     skills: null,
     drops: ["small-slime-fragment", "glowing-core-fragment", "thunder-wisp-sigil", "weightless-core-fragment"],
-    synthesis: null,
   },
   {
     id: 38,
@@ -628,7 +578,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: null,
     drops: ["small-slime-fragment", "lizard-scale"],
-    synthesis: null,
   },
   {
     id: 39,
@@ -640,7 +589,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: null,
     drops: ["small-slime-fragment", "poison-lizard-scale"],
-    synthesis: null,
   },
   {
     id: 40,
@@ -656,7 +604,6 @@ export const slimes: Slime[] = [
     traits: ["luminescence"],
     skills: ["electric-orb"],
     drops: ["small-slime-fragment", "electric-lizard-scale", "glowing-core-fragment", "parched-core-fragment"],
-    synthesis: null,
   },
   {
     id: 41,
@@ -671,7 +618,6 @@ export const slimes: Slime[] = [
     traits: ["flight"],
     skills: ["dark-orb"],
     drops: ["small-slime-fragment", "rusty-sharp-blade"],
-    synthesis: null,
   },
   {
     id: 42,
@@ -686,7 +632,6 @@ export const slimes: Slime[] = [
     traits: ["bond"],
     skills: ["leaf-boomerang", "leaf-spread"],
     drops: ["small-slime-fragment", "melon-tentacle", "verdant-core-fragment"],
-    synthesis: null,
   },
   {
     id: 43,
@@ -703,7 +648,6 @@ export const slimes: Slime[] = [
     traits: ["bond"],
     skills: ["water-ball", "leaf-spread"],
     drops: ["small-slime-fragment", "aqua-melon-tentacle", "verdant-core-fragment"],
-    synthesis: null,
   },
   {
     id: 44,
@@ -717,7 +661,6 @@ export const slimes: Slime[] = [
     traits: ["bond"],
     skills: ["poison-ball", "leaf-boomerang", "leaf-spread"],
     drops: ["small-slime-fragment", "rotten-melon-tentacle"],
-    synthesis: null,
   },
   {
     id: 45,
@@ -729,7 +672,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 46,
@@ -747,7 +689,6 @@ export const slimes: Slime[] = [
       "power-upper",
     ],
     drops: ["small-slime-fragment", "slick-vent"],
-    synthesis: null,
   },
   {
     id: 47,
@@ -758,8 +699,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: null,
-    synthesis: null,
+    drops: ["small-slime-fragment"],
   },
   {
     id: 48,
@@ -774,7 +714,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment", "hornet-insect-wing", "weightless-core-fragment"],
-    synthesis: null,
   },
   {
     id: 49,
@@ -788,7 +727,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["poison-hornet-insect-wing", "small-slime-fragment", "weightless-core-fragment"],
-    synthesis: null,
   },
   {
     id: 50,
@@ -802,7 +740,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["volt-hornet-insect-wing", "small-slime-fragment", "weightless-core-fragment"],
-    synthesis: null,
   },
   {
     id: 51,
@@ -814,7 +751,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 52,
@@ -828,7 +764,6 @@ export const slimes: Slime[] = [
     traits: ["swimming"],
     skills: null,
     drops: ["small-slime-fragment", "stella-sigil"],
-    synthesis: null,
   },
   {
     id: 53,
@@ -840,7 +775,6 @@ export const slimes: Slime[] = [
     traits: ["flight"],
     skills: ["water-ball"],
     drops: ["small-slime-fragment", "shade-vent"],
-    synthesis: null,
   },
   {
     id: 54,
@@ -852,7 +786,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: ["stone-shot"],
     drops: null,
-    synthesis: null,
   },
   {
     id: 55,
@@ -864,7 +797,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: ["poison-ball", "dark-orb", "dark-swing"],
     drops: null,
-    synthesis: null,
   },
   {
     id: 56,
@@ -880,7 +812,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["dandelion-orb", "small-slime-fragment", "verdant-core-fragment", "weightless-core-fragment"],
-    synthesis: null,
   },
   {
     id: 57,
@@ -892,7 +823,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 58,
@@ -904,7 +834,6 @@ export const slimes: Slime[] = [
     traits: ["luminescence"],
     skills: ["power-drive", "power-swing", "force-dash", "power-upper"],
     drops: null,
-    synthesis: null,
   },
   {
     id: 59,
@@ -916,7 +845,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 60,
@@ -930,7 +858,6 @@ export const slimes: Slime[] = [
     traits: ["luminescence"],
     skills: ["electric-orb", "lightning-dash", "wind-ball"],
     drops: ["small-slime-fragment", "fried-feather", "glowing-core-fragment"],
-    synthesis: null,
   },
   {
     id: 61,
@@ -942,7 +869,6 @@ export const slimes: Slime[] = [
     traits: ["mining", "ironclad"],
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 62,
@@ -956,7 +882,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment", "fluffy-feather"],
-    synthesis: null,
   },
   {
     id: 63,
@@ -973,7 +898,6 @@ export const slimes: Slime[] = [
     traits: ["flight"],
     skills: ["wind-ball", "dark-orb", "dark-swing"],
     drops: ["small-slime-fragment", "vesper-demon-wing", "weightless-core-fragment"],
-    synthesis: null,
   },
   {
     id: 64,
@@ -988,7 +912,6 @@ export const slimes: Slime[] = [
     traits: ["flight"],
     skills: ["poison-ball"],
     drops: ["small-slime-fragment", "infesper-devil-wing", "weightless-core-fragment"],
-    synthesis: null,
   },
   {
     id: 65,
@@ -1002,7 +925,6 @@ export const slimes: Slime[] = [
     traits: ["mining"],
     skills: ["iron-shot"],
     drops: ["small-slime-fragment", "mole-sharp-blade"],
-    synthesis: null,
   },
   {
     id: 66,
@@ -1014,7 +936,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 67,
@@ -1025,8 +946,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 68,
@@ -1038,7 +958,6 @@ export const slimes: Slime[] = [
     traits: ["riding"],
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 69,
@@ -1049,8 +968,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 70,
@@ -1062,7 +980,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment", "monocular-tentacle", "weightless-core-fragment"],
-    synthesis: null,
   },
   {
     id: 71,
@@ -1074,7 +991,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 72,
@@ -1086,7 +1002,6 @@ export const slimes: Slime[] = [
     traits: ["swimming", "ironclad"],
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 73,
@@ -1098,7 +1013,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 74,
@@ -1110,7 +1024,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 75,
@@ -1122,7 +1035,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 76,
@@ -1134,7 +1046,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 77,
@@ -1146,7 +1057,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 78,
@@ -1158,7 +1068,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 79,
@@ -1170,7 +1079,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 80,
@@ -1182,7 +1090,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 81,
@@ -1194,7 +1101,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 82,
@@ -1206,7 +1112,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 83,
@@ -1218,7 +1123,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 84,
@@ -1230,7 +1134,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 85,
@@ -1242,7 +1145,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 86,
@@ -1254,7 +1156,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 87,
@@ -1266,7 +1167,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 88,
@@ -1278,7 +1178,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 89,
@@ -1290,7 +1189,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 90,
@@ -1302,7 +1200,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 91,
@@ -1314,7 +1211,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 92,
@@ -1326,7 +1222,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 93,
@@ -1338,7 +1233,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 94,
@@ -1349,8 +1243,7 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 95,
@@ -1362,7 +1255,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 96,
@@ -1374,7 +1266,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 97,
@@ -1386,7 +1277,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 98,
@@ -1398,7 +1288,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 99,
@@ -1410,7 +1299,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 100,
@@ -1422,7 +1310,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 101,
@@ -1434,7 +1321,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 102,
@@ -1446,7 +1332,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 103,
@@ -1458,7 +1343,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 104,
@@ -1470,7 +1354,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 105,
@@ -1482,7 +1365,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 106,
@@ -1494,7 +1376,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 107,
@@ -1506,7 +1387,6 @@ export const slimes: Slime[] = [
     traits: ["flight"],
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 108,
@@ -1518,7 +1398,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 109,
@@ -1530,7 +1409,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 110,
@@ -1542,7 +1420,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 111,
@@ -1554,7 +1431,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 112,
@@ -1566,7 +1442,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 113,
@@ -1578,7 +1453,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 114,
@@ -1590,7 +1464,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 115,
@@ -1602,7 +1475,6 @@ export const slimes: Slime[] = [
     traits: ["flight"],
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 116,
@@ -1614,7 +1486,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 117,
@@ -1626,7 +1497,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 118,
@@ -1638,7 +1508,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 119,
@@ -1650,7 +1519,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 120,
@@ -1662,7 +1530,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 121,
@@ -1674,7 +1541,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 122,
@@ -1686,7 +1552,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 123,
@@ -1698,7 +1563,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 124,
@@ -1710,7 +1574,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 125,
@@ -1722,7 +1585,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 126,
@@ -1734,7 +1596,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 127,
@@ -1746,7 +1607,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 128,
@@ -1758,7 +1618,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 129,
@@ -1770,7 +1629,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 130,
@@ -1782,7 +1640,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 131,
@@ -1794,7 +1651,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 132,
@@ -1806,7 +1662,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 133,
@@ -1818,7 +1673,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 134,
@@ -1830,7 +1684,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 135,
@@ -1842,7 +1695,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 136,
@@ -1854,7 +1706,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 137,
@@ -1866,7 +1717,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 138,
@@ -1878,7 +1728,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 139,
@@ -1890,7 +1739,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 140,
@@ -1902,7 +1750,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 141,
@@ -1914,7 +1761,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 142,
@@ -1926,7 +1772,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 143,
@@ -1938,7 +1783,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 144,
@@ -1950,7 +1794,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 145,
@@ -1962,7 +1805,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 146,
@@ -1974,7 +1816,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 147,
@@ -1986,7 +1827,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 148,
@@ -1998,7 +1838,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 149,
@@ -2010,7 +1849,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 150,
@@ -2022,7 +1860,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 151,
@@ -2034,7 +1871,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 152,
@@ -2046,7 +1882,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 153,
@@ -2058,7 +1893,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 154,
@@ -2070,7 +1904,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 155,
@@ -2082,7 +1915,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 156,
@@ -2094,7 +1926,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 157,
@@ -2106,7 +1937,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 158,
@@ -2118,7 +1948,6 @@ export const slimes: Slime[] = [
     traits: ["flight", "luminescence"],
     skills: null,
     drops: null,
-    synthesis: null,
   },
   {
     id: 159,
@@ -2130,7 +1959,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 160,
@@ -2142,7 +1970,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 161,
@@ -2154,7 +1981,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 162,
@@ -2166,7 +1992,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 163,
@@ -2178,7 +2003,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 164,
@@ -2190,7 +2014,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 165,
@@ -2202,7 +2025,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 166,
@@ -2214,7 +2036,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 167,
@@ -2226,7 +2047,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 168,
@@ -2238,7 +2058,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 169,
@@ -2250,7 +2069,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 170,
@@ -2262,7 +2080,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 171,
@@ -2274,7 +2091,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 172,
@@ -2286,7 +2102,6 @@ export const slimes: Slime[] = [
     traits: null,
     skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
   },
   {
     id: 173,
@@ -2305,8 +2120,7 @@ export const slimes: Slime[] = [
     ],
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 174,
@@ -2324,8 +2138,7 @@ export const slimes: Slime[] = [
     ],
     traits: null,
     skills: null,
-    drops: ["small-slime-fragment"],
-    synthesis: null,
+    drops: null,
   },
   {
     id: 175,
@@ -2336,7 +2149,171 @@ export const slimes: Slime[] = [
     locations: null,
     traits: null,
     skills: null,
+    drops: null,
+  },
+  {
+    id: 176,
+    name: null,
+    dataStatus: "pending",
+    type1: null,
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
     drops: ["small-slime-fragment"],
-    synthesis: null,
+  },
+  {
+    id: 177,
+    name: null,
+    dataStatus: "pending",
+    type1: null,
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment"],
+  },
+  {
+    id: 178,
+    name: null,
+    dataStatus: "pending",
+    type1: null,
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment"],
+  },
+  {
+    id: 179,
+    name: "Minotaur",
+    dataStatus: "pending",
+    type1: "power",
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+  },
+  {
+    id: 180,
+    name: "Wyvern",
+    dataStatus: "pending",
+    type1: "wind",
+    type2: null,
+    locations: null,
+    traits: ["flight", "riding"],
+    skills: null,
+    drops: null,
+  },
+  {
+    id: 181,
+    name: "Hippogriff",
+    dataStatus: "pending",
+    type1: "wind",
+    type2: "ground",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+  },
+  {
+    id: 182,
+    name: "Lycan",
+    dataStatus: "pending",
+    type1: "power",
+    type2: "dark",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+  },
+  {
+    id: 183,
+    name: null,
+    dataStatus: "pending",
+    type1: null,
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment"],
+  },
+  {
+    id: 184,
+    name: null,
+    dataStatus: "pending",
+    type1: null,
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment"],
+  },
+  {
+    id: 185,
+    name: null,
+    dataStatus: "pending",
+    type1: null,
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment"],
+  },
+  {
+    id: 186,
+    name: "Sky Whale",
+    dataStatus: "pending",
+    type1: "wind",
+    type2: "ice",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+  },
+  {
+    id: 187,
+    name: null,
+    dataStatus: "pending",
+    type1: null,
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment"],
+  },
+  {
+    id: 188,
+    name: "Dryad",
+    dataStatus: "pending",
+    type1: "grass",
+    type2: "light",
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+  },
+  {
+    id: 189,
+    name: "Golem",
+    dataStatus: "pending",
+    type1: "ground",
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: null,
+  },
+  {
+    id: 190,
+    name: null,
+    dataStatus: "pending",
+    type1: null,
+    type2: null,
+    locations: null,
+    traits: null,
+    skills: null,
+    drops: ["small-slime-fragment"],
   },
 ];

@@ -74,13 +74,12 @@ app.innerHTML = `
         <a class="topnav-link" href="#slimes">Slimepedia</a>
         <a class="topnav-link" href="#sinteses">Sínteses</a>
         <a class="topnav-link" href="#map">Map</a>
-        <a class="topnav-link" href="#sobre">Sobre o projeto</a>
       </nav>
       <span class="game-label"><span class="status-dot"></span> WORLD OF SLIMES</span>
     </header>
 
     <main id="home-content">
-      <section class="intro" id="sobre">
+      <section class="intro" id="intro">
         <div class="intro-copy">
           <p class="eyebrow"><span class="eyebrow-line"></span> GUIA DA COMUNIDADE</p>
           <h1>Conheça cada<br /><span>slime.</span></h1>
@@ -439,12 +438,6 @@ function renderDetailSynthesis(slime: Slime): string {
       ${renderRecipeGroup("Obtido como resultado", resultRecipes, false)}`;
   }
 
-  if (slime.synthesis === "unavailable") {
-    return '<p class="detail-unknown">Não pode ser obtido por síntese</p>';
-  }
-  if (slime.synthesis === "unknown") {
-    return '<p class="detail-unknown">Informação não verificada</p>';
-  }
   return '<p class="detail-unknown">A catalogar</p>';
 }
 
@@ -572,11 +565,7 @@ function renderSlimeDetails(slime: Slime): void {
   );
   const synthesisLabel = recipes.length > 0
     ? `${recipes.length} ${recipes.length === 1 ? "receita" : "receitas"}`
-    : slime.synthesis === "unavailable"
-      ? "Não disponível"
-      : slime.synthesis === "unknown"
-        ? "Não verificada"
-        : "A catalogar";
+    : "A catalogar";
 
   detailScreen.innerHTML = `
     <a class="back-link" href="#slimes"><span aria-hidden="true">←</span> Voltar à Slimepedia</a>
@@ -704,13 +693,20 @@ function renderPendingSyntheses(): string {
     const itemNames = escapeHtml(getSynthesisIngredientsLabel(recipe.ingredients, recipe.ingredientStatus));
     const result = recipe.resultSlimeId === null
       ? '<span class="recipe-result recipe-result-unknown">Resultado não descoberto</span>'
-      : `<span class="recipe-result">${renderSlimeLink(recipe.resultSlimeId)}</span>`;
+      : `<span class="recipe-result recipe-result-slime">${renderSlimeAvatar(
+        getSlimeForSynthesis(recipe.resultSlimeId),
+        "recipe-avatar",
+      )}${renderSlimeLink(recipe.resultSlimeId)}</span>`;
+    const renderIngredient = (slimeId: number, role: string) => {
+      const slime = getSlimeForSynthesis(slimeId);
+      return `<span class="recipe-slime">${renderSlimeAvatar(slime, "recipe-avatar")}<span class="recipe-slime-info">${renderSlimeLink(slimeId)}<small>${role}</small></span></span>`;
+    };
     return `
       <article class="recipe-card">
         <div class="recipe-combination">
-          <span class="recipe-slime">${renderSlimeLink(recipe.mainSlimeId)} <small>Main slime</small></span>
+          ${renderIngredient(recipe.mainSlimeId, "Main slime")}
           <span class="recipe-plus" aria-hidden="true">+</span>
-          <span class="recipe-slime">${renderSlimeLink(recipe.subSlimeId)} <small>Sub slime</small></span>
+          ${renderIngredient(recipe.subSlimeId, "Sub slime")}
           <span class="recipe-arrow" aria-hidden="true">→</span>
           ${result}
         </div>
@@ -718,6 +714,14 @@ function renderPendingSyntheses(): string {
       </article>
     `;
   }).join("");
+}
+
+function getSlimeForSynthesis(slimeId: number): Slime {
+  const slime = slimesById.get(slimeId);
+  if (!slime) {
+    throw new Error(`Síntese referencia slime inexistente: #${slimeId}`);
+  }
+  return slime;
 }
 
 function renderSynthesisResults(): void {
