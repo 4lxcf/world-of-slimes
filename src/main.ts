@@ -3,7 +3,7 @@ import { slimeImages } from "./data/slime-images";
 import { itemImages } from "./data/item-images";
 import { items, type ItemId } from "./data/items";
 import { locations } from "./data/locations";
-import { skills } from "./data/skills";
+import { skills, type Skill, type SkillCategory, type SkillRange } from "./data/skills";
 import { syntheses } from "./data/syntheses";
 import { traits } from "./data/traits";
 import { slimeTypes, type SlimeTypeId } from "./data/types";
@@ -62,6 +62,36 @@ const locationsById = new Map(locations.map((location) => [location.id, location
 const skillsById = new Map(skills.map((skill) => [skill.id, skill]));
 const typeNames = new Map(slimeTypes.map(({ id, name }) => [id, name]));
 const traitNames = new Map(traits.map(({ id, name }) => [id, name]));
+const featuredSlimeIds = [104, 107, 105, 108, 115];
+const featuredSlimes = featuredSlimeIds.map((id) => {
+  const slime = slimesById.get(id);
+  if (!slime || !slime.name || !slimeImages[id]) {
+    throw new Error(`Dados incompletos para o slime em destaque #${id}.`);
+  }
+  return slime;
+});
+
+function renderFeaturedSlime(slime: Slime, index: number): string {
+  const imagePath = slimeImages[slime.id];
+  if (!imagePath || !slime.name) {
+    throw new Error(`Dados incompletos para o slime em destaque #${slime.id}.`);
+  }
+  const types = [slime.type1, slime.type2]
+    .filter((type): type is SlimeTypeId => type !== null)
+    .map((type) => `<span class="type-tag type-tag-${escapeHtml(type)}"><i></i>${escapeHtml(getTypeName(type))}</span>`)
+    .join("");
+
+  return `<article class="hero-slide" data-hero-slide aria-label="${index + 1} de ${featuredSlimes.length}" aria-roledescription="slide"${index === 0 ? "" : " hidden"}>
+    <a class="hero-slide-link" href="#slime/${slime.id}" aria-label="${escapeHtml(slime.name)}, ID ${String(slime.id).padStart(3, "0")}, tipos ${[slime.type1, slime.type2].filter((type): type is SlimeTypeId => type !== null).map(getTypeName).join(" e ")}">
+      <img class="hero-slide-image" src="${imagePath}" alt="${escapeHtml(slime.name)}" decoding="async">
+      <div class="hero-slide-info">
+        <span class="hero-slide-id">ID #${String(slime.id).padStart(3, "0")}</span>
+        <h2>${escapeHtml(slime.name)}</h2>
+        <div class="hero-slide-types">${types}</div>
+      </div>
+    </a>
+  </article>`;
+}
 
 app.innerHTML = `
   <div class="site-shell">
@@ -70,11 +100,15 @@ app.innerHTML = `
         <span class="brand-mark" aria-hidden="true"><span></span></span>
         <span class="brand-name">slimepedia<span>.</span></span>
       </a>
-      <nav class="topnav" aria-label="Navegação principal">
+      <nav class="topnav" id="primary-navigation" aria-label="Navegação principal">
         <a class="topnav-link" href="#slimes">Slimepedia</a>
+        <a class="topnav-link" href="#skills">Skills</a>
         <a class="topnav-link" href="#sinteses">Sínteses</a>
         <a class="topnav-link" href="#map">Map</a>
       </nav>
+      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-controls="primary-navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
       <span class="game-label"><span class="status-dot"></span> WORLD OF SLIMES</span>
     </header>
 
@@ -84,16 +118,17 @@ app.innerHTML = `
           <p class="eyebrow"><span class="eyebrow-line"></span> GUIA DA COMUNIDADE</p>
           <h1>Conheça cada<br /><span>slime.</span></h1>
           <p class="intro-description">Seu guia para descobrir, comparar e encontrar os slimes de World of Slimes.</p>
-          <a class="explore-link" href="#slimes">Explorar a Slimepedia <span aria-hidden="true">↓</span></a>
         </div>
-        <div class="hero-art" aria-hidden="true">
-          <div class="orbit orbit-one"></div>
-          <div class="orbit orbit-two"></div>
-          <div class="hero-spark spark-one">✳</div>
-          <div class="hero-spark spark-two">✦</div>
-          <div class="hero-spark spark-three">·</div>
-          <div class="hero-slime"><i></i><b></b><span></span></div>
-          <div class="hero-caption">TODO GRANDE TIME COMEÇA COM UMA DESCOBERTA.</div>
+        <div class="hero-art">
+          <div class="hero-showcase">
+            <p class="hero-showcase-label"><span aria-hidden="true">✦</span> DESCOBERTAS RECENTES</p>
+            <section class="hero-carousel" id="featured-slimes" aria-label="Últimos slimes identificados" aria-roledescription="carrossel">
+              <div class="hero-carousel-track" aria-live="off">
+                ${featuredSlimes.map(renderFeaturedSlime).join("")}
+              </div>
+              <div class="hero-carousel-progress" aria-hidden="true"><span class="hero-carousel-progress-bar"></span></div>
+            </section>
+          </div>
         </div>
       </section>
 
@@ -121,7 +156,7 @@ app.innerHTML = `
           <label class="select-wrap">
             <span class="sr-only">Filtrar por tipo</span>
             <select id="type-filter">
-              <option value="all">Todos os tipos</option>
+              <option value="all">Todas as categorias</option>
               ${slimeTypes.map(({ id, name }) => `<option value="${escapeHtml(id)}">${escapeHtml(name)}</option>`).join("")}
             </select>
             <span class="select-chevron" aria-hidden="true">⌄</span>
@@ -185,6 +220,13 @@ const totalCount = getRequiredElement<HTMLSpanElement>("#total-count");
 const homeContent = getRequiredElement<HTMLElement>("#home-content");
 const detailScreen = getRequiredElement<HTMLElement>("#detail-screen");
 const sectionScreen = getRequiredElement<HTMLElement>("#section-screen");
+const primaryNavigation = getRequiredElement<HTMLElement>("#primary-navigation");
+const menuToggle = getRequiredElement<HTMLButtonElement>(".menu-toggle");
+const heroCarousel = getRequiredElement<HTMLElement>("#featured-slimes");
+const heroSlides = [...heroCarousel.querySelectorAll<HTMLElement>("[data-hero-slide]")];
+const heroCarouselProgress = getRequiredElement<HTMLElement>(".hero-carousel-progress-bar");
+let activeHeroSlideIndex = 0;
+const HERO_SLIDE_DURATION_MS = 10_000;
 let selectedMapLocationId: string = locations[0]?.id ?? "";
 let selectedSynthesisItem: ItemId | null = null;
 
@@ -322,16 +364,7 @@ function renderDetailSkills(slime: Slime): string {
     if (!skill) {
       throw new Error(`Skill não cadastrada: ${skillId}`);
     }
-    const formatRange = ({ min, max }: { min: number | null; max: number | null }) => {
-      if (min === null && max === null) {
-        return "—";
-      }
-      return `${min ?? "—"}–${max ?? "—"}`;
-    };
-    const mp = formatRange(skill.mpCost);
-    const cooldown = formatRange(skill.cooldown);
-    const damage = formatRange(skill.damage);
-    return `<li><strong>${escapeHtml(skill.name)}</strong><span class="detail-meta">MP ${escapeHtml(mp)} · CD ${escapeHtml(cooldown)} · Dano ${escapeHtml(damage)}</span></li>`;
+    return `<li><strong><a href="#skill/${skill.id}">${escapeHtml(skill.name)}</a></strong><span class="detail-meta">MP ${escapeHtml(formatSkillRange(skill.mpCost))} · CD ${escapeHtml(formatSkillRange(skill.cooldown, " s"))} · Dano ${escapeHtml(formatSkillRange(skill.damage))}</span></li>`;
   }).join("")}</ul>`;
 }
 
@@ -1124,6 +1157,290 @@ function renderMapLocations(query: string): void {
   `;
 }
 
+function getSkillCategoryLabel(category: SkillCategory): string {
+  switch (category) {
+    case "physical":
+      return "Física";
+    case "magic":
+      return "Mágica";
+    case "status":
+      return "Status";
+  }
+}
+
+function renderSkillCategories(categories: Skill["category"]): string {
+  if (categories === null || categories.length === 0) {
+    return '<span class="type-empty">Categoria a catalogar</span>';
+  }
+  return `<span class="skill-category-badges">${categories.map((category) =>
+    `<span class="skill-category-badge skill-kind-${category}">${escapeHtml(getSkillCategoryLabel(category))}</span>`,
+  ).join("")}</span>`;
+}
+
+function renderSkillElementalType(type: Skill["type"]): string {
+  if (type === null) {
+    return '<span class="type-empty">A catalogar</span>';
+  }
+  return `<span class="type-tag type-tag-${escapeHtml(type)}"><i></i>${escapeHtml(getTypeName(type))}</span>`;
+}
+
+function formatSkillRange({ min, max }: SkillRange, suffix = ""): string {
+  if (min === null && max === null) {
+    return "A catalogar";
+  }
+  if (min === max) {
+    return `${min}${suffix}`;
+  }
+  return `${min ?? "A catalogar"}–${max ?? "A catalogar"}${suffix}`;
+}
+
+const skillSortKeys = ["name", "type", "category", "mpCost", "cooldown", "damage"] as const;
+type SkillSortKey = (typeof skillSortKeys)[number];
+type SkillSortDirection = "ascending" | "descending";
+
+function isSkillSortKey(value: string): value is SkillSortKey {
+  return skillSortKeys.some((key) => key === value);
+}
+
+function compareNullable<T>(
+  first: T | null,
+  second: T | null,
+  compare: (first: T, second: T) => number,
+  direction: SkillSortDirection,
+): number {
+  if (first === null || second === null) {
+    return first === second ? 0 : first === null ? 1 : -1;
+  }
+  const result = compare(first, second);
+  return direction === "ascending" ? result : -result;
+}
+
+function compareSkillRanges(
+  first: SkillRange,
+  second: SkillRange,
+  direction: SkillSortDirection,
+): number {
+  const firstMin = first.min ?? first.max;
+  const secondMin = second.min ?? second.max;
+  return compareNullable(firstMin, secondMin, (a, b) => a - b, direction) ||
+    compareNullable(first.max, second.max, (a, b) => a - b, direction);
+}
+
+function compareSkills(
+  first: Skill,
+  second: Skill,
+  key: SkillSortKey,
+  direction: SkillSortDirection,
+): number {
+  switch (key) {
+    case "name":
+      return first.name.localeCompare(second.name, "pt-BR", { numeric: true }) *
+        (direction === "ascending" ? 1 : -1);
+    case "type":
+      return compareNullable(
+        first.type === null ? null : getTypeName(first.type),
+        second.type === null ? null : getTypeName(second.type),
+        (a, b) => a.localeCompare(b, "pt-BR"),
+        direction,
+      );
+    case "category": {
+      const getCategories = (skill: Skill) => skill.category === null || skill.category.length === 0
+        ? null
+        : skill.category.map(getSkillCategoryLabel).sort((a, b) => a.localeCompare(b, "pt-BR")).join(", ");
+      return compareNullable(
+        getCategories(first),
+        getCategories(second),
+        (a, b) => a.localeCompare(b, "pt-BR"),
+        direction,
+      );
+    }
+    case "mpCost":
+      return compareSkillRanges(first.mpCost, second.mpCost, direction);
+    case "cooldown":
+      return compareSkillRanges(first.cooldown, second.cooldown, direction);
+    case "damage":
+      return compareSkillRanges(first.damage, second.damage, direction);
+  }
+}
+
+function renderSkillCards(
+  query: string,
+  typeFilter: string,
+  sortKey: SkillSortKey,
+  sortDirection: SkillSortDirection,
+): void {
+  const list = sectionScreen.querySelector<HTMLDivElement>("#skill-list");
+  const count = sectionScreen.querySelector<HTMLParagraphElement>("#skill-results-count");
+  const emptyState = sectionScreen.querySelector<HTMLDivElement>("#skill-empty-state");
+  const table = sectionScreen.querySelector<HTMLTableElement>(".skill-table");
+  if (!list || !count || !emptyState || !table) {
+    throw new Error("Não foi possível inicializar a lista de skills.");
+  }
+
+  const normalizedQuery = query.trim().toLocaleLowerCase("pt-BR");
+  const filteredSkills = skills
+    .filter((skill) => {
+      if (typeFilter !== "all") {
+        const matchesType = typeFilter === "unknown"
+          ? skill.type === null
+          : skill.type === typeFilter;
+        if (!matchesType) {
+          return false;
+        }
+      }
+      if (!normalizedQuery) {
+        return true;
+      }
+      const users = slimes.filter((slime) => slime.skills?.includes(skill.id));
+      return [skill.name, ...users.map((slime) => slime.name ?? "")]
+        .some((value) => value.toLocaleLowerCase("pt-BR").includes(normalizedQuery));
+    })
+    .sort((first, second) => compareSkills(first, second, sortKey, sortDirection));
+
+  table.querySelectorAll<HTMLTableCellElement>("thead th").forEach((header) => {
+    const button = header.querySelector<HTMLButtonElement>("[data-skill-sort]");
+    const headerKey = button?.dataset.skillSort;
+    if (!button || !headerKey || !isSkillSortKey(headerKey)) {
+      throw new Error("Cabeçalho de ordenação de skills inválido.");
+    }
+    const isActive = headerKey === sortKey;
+    const nextDirection = isActive && sortDirection === "ascending" ? "descending" : "ascending";
+    header.setAttribute("aria-sort", isActive ? sortDirection : "none");
+    button.setAttribute(
+      "aria-label",
+      `Ordenar por ${button.dataset.skillSortLabel} em ordem ${nextDirection === "ascending" ? "crescente" : "decrescente"}`,
+    );
+    const indicator = button.querySelector<HTMLElement>(".skill-sort-indicator");
+    if (!indicator) {
+      throw new Error("Indicador de ordenação da skill não encontrado.");
+    }
+    indicator.textContent = isActive ? (sortDirection === "ascending" ? "↑" : "↓") : "↕";
+  });
+
+  list.innerHTML = filteredSkills.map((skill) => `
+    <tr>
+      <td><a class="skill-table-link" href="#skill/${skill.id}">${escapeHtml(skill.name)}</a></td>
+      <td>${renderSkillElementalType(skill.type)}</td>
+      <td>${renderSkillCategories(skill.category)}</td>
+      <td>${escapeHtml(formatSkillRange(skill.mpCost))}</td>
+      <td>${escapeHtml(formatSkillRange(skill.cooldown, " s"))}</td>
+      <td>${escapeHtml(formatSkillRange(skill.damage))}</td>
+    </tr>
+  `).join("");
+
+  count.textContent = `Exibindo ${filteredSkills.length} de ${skills.length} skills`;
+  emptyState.hidden = filteredSkills.length > 0;
+}
+
+function renderSkillsPage(): void {
+  sectionScreen.innerHTML = `
+    <section class="section-heading">
+      <p class="eyebrow"><span class="eyebrow-line"></span> GUIA DA COMUNIDADE</p>
+      <h1 class="section-title">Skills<span>.</span></h1>
+      <p class="section-description">Consulte as skills catalogadas, seus atributos conhecidos e os slimes associados.</p>
+    </section>
+    <div class="skill-toolbar">
+      <label class="skill-search">
+        <span class="sr-only">Buscar skill ou slime</span>
+        <input id="skill-search" type="search" placeholder="Buscar por skill ou slime..." autocomplete="off" />
+      </label>
+      <label class="skill-type-filter">
+        <span class="sr-only">Filtrar por tipo de skill</span>
+        <select id="skill-type-filter">
+          <option value="all">Todos os tipos</option>
+          ${slimeTypes.map(({ id, name }) => `<option value="${escapeHtml(id)}">${escapeHtml(name)}</option>`).join("")}
+          <option value="unknown">Tipo a catalogar</option>
+        </select>
+      </label>
+    </div>
+    <p class="skill-results-count" id="skill-results-count" aria-live="polite"></p>
+    <div class="skill-table-frame">
+      <table class="skill-table">
+        <thead>
+          <tr>
+            <th scope="col" aria-sort="ascending"><button class="skill-sort-button" type="button" data-skill-sort="name" data-skill-sort-label="Nome"><span>Nome</span><span class="skill-sort-indicator" aria-hidden="true">↑</span></button></th>
+            <th scope="col" aria-sort="none"><button class="skill-sort-button" type="button" data-skill-sort="type" data-skill-sort-label="Tipo"><span>Tipo</span><span class="skill-sort-indicator" aria-hidden="true">↕</span></button></th>
+            <th scope="col" aria-sort="none"><button class="skill-sort-button" type="button" data-skill-sort="category" data-skill-sort-label="Categoria"><span>Categoria</span><span class="skill-sort-indicator" aria-hidden="true">↕</span></button></th>
+            <th scope="col" aria-sort="none"><button class="skill-sort-button" type="button" data-skill-sort="mpCost" data-skill-sort-label="MP"><span>MP</span><span class="skill-sort-indicator" aria-hidden="true">↕</span></button></th>
+            <th scope="col" aria-sort="none"><button class="skill-sort-button" type="button" data-skill-sort="cooldown" data-skill-sort-label="Recarga"><span>Recarga</span><span class="skill-sort-indicator" aria-hidden="true">↕</span></button></th>
+            <th scope="col" aria-sort="none"><button class="skill-sort-button" type="button" data-skill-sort="damage" data-skill-sort-label="Dano"><span>Dano</span><span class="skill-sort-indicator" aria-hidden="true">↕</span></button></th>
+          </tr>
+        </thead>
+        <tbody id="skill-list"></tbody>
+      </table>
+    </div>
+    <div class="section-empty skill-empty" id="skill-empty-state" hidden>
+      <strong>Nenhuma skill encontrada</strong>
+      <p>Tente buscar por outro nome ou ajustar o filtro.</p>
+    </div>
+  `;
+  const search = sectionScreen.querySelector<HTMLInputElement>("#skill-search");
+  const typeFilter = sectionScreen.querySelector<HTMLSelectElement>("#skill-type-filter");
+  if (!search || !typeFilter) {
+    throw new Error("Não foi possível inicializar os filtros de skills.");
+  }
+  let sortKey: SkillSortKey = "name";
+  let sortDirection: SkillSortDirection = "ascending";
+  const updateSkills = () => renderSkillCards(search.value, typeFilter.value, sortKey, sortDirection);
+  search.addEventListener("input", updateSkills);
+  typeFilter.addEventListener("change", updateSkills);
+  sectionScreen.querySelector<HTMLTableElement>(".skill-table")?.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+    const button = target.closest<HTMLButtonElement>("[data-skill-sort]");
+    const nextKey = button?.dataset.skillSort;
+    if (!nextKey || !isSkillSortKey(nextKey)) {
+      return;
+    }
+    if (sortKey === nextKey) {
+      sortDirection = sortDirection === "ascending" ? "descending" : "ascending";
+    } else {
+      sortKey = nextKey;
+      sortDirection = "ascending";
+    }
+    updateSkills();
+  });
+  updateSkills();
+}
+
+function renderSkillDetails(skill: Skill): void {
+  const users = slimes.filter((slime) => slime.skills?.includes(skill.id));
+  sectionScreen.innerHTML = `
+    <a class="back-link" href="#skills"><span aria-hidden="true">←</span> Voltar às Skills</a>
+    <section class="skill-detail-card">
+      <header class="skill-detail-heading">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> SKILL CATALOGADA</p>
+          <h1 class="section-title">${escapeHtml(skill.name)}<span>.</span></h1>
+        </div>
+        ${renderSkillCategories(skill.category)}
+      </header>
+      <dl class="skill-detail-stats">
+        <div><dt>Tipo elemental</dt><dd>${renderSkillElementalType(skill.type)}</dd></div>
+        <div><dt>MP</dt><dd>${escapeHtml(formatSkillRange(skill.mpCost))}</dd></div>
+        <div><dt>Recarga</dt><dd>${escapeHtml(formatSkillRange(skill.cooldown, " s"))}</dd></div>
+        <div><dt>Dano</dt><dd>${escapeHtml(formatSkillRange(skill.damage))}</dd></div>
+      </dl>
+      <section class="skill-detail-users" aria-labelledby="skill-users-heading">
+        <h2 id="skill-users-heading">Slimes com esta skill</h2>
+        ${users.length > 0
+          ? `<ul>${users.map((slime) => `
+              <li>
+                <a class="skill-user-card" href="#slime/${slime.id}">
+                  ${renderSlimeAvatar(slime, "skill-user-avatar")}
+                  <span class="skill-user-name">${escapeHtml(slime.name ?? "Nome a confirmar")}</span>
+                  <span class="skill-user-id">#${String(slime.id).padStart(3, "0")}</span>
+                </a>
+              </li>
+            `).join("")}</ul>`
+          : '<p class="detail-unknown">Nenhum slime com esta skill foi registrado até agora.</p>'}
+      </section>
+    </section>
+  `;
+}
+
 function renderMapPage(): void {
   sectionScreen.innerHTML = `
     <section class="section-heading">
@@ -1172,18 +1489,35 @@ function renderMapPage(): void {
 
 function renderRoute(): void {
   const match = window.location.hash.match(/^#slime\/(\d+)$/);
+  const skillMatch = window.location.hash.match(/^#skill\/([a-z0-9-]+)$/);
   const hash = window.location.hash;
+  const skill = skillMatch
+    ? skills.find(({ id }) => id === skillMatch[1])
+    : undefined;
+  const isSkillsPage = hash === "#skills" || skillMatch !== null;
   const isSynthesisPage = hash === "#sinteses";
   const isMapPage = hash === "#map";
-  getRequiredElement<HTMLAnchorElement>('.topnav-link[href="#slimes"]').classList.toggle("is-active", !isSynthesisPage && !isMapPage);
+  getRequiredElement<HTMLAnchorElement>('.topnav-link[href="#slimes"]').classList.toggle("is-active", !isSkillsPage && !isSynthesisPage && !isMapPage);
+  getRequiredElement<HTMLAnchorElement>('.topnav-link[href="#skills"]').classList.toggle("is-active", isSkillsPage);
   getRequiredElement<HTMLAnchorElement>('.topnav-link[href="#sinteses"]').classList.toggle("is-active", isSynthesisPage);
   getRequiredElement<HTMLAnchorElement>('.topnav-link[href="#map"]').classList.toggle("is-active", isMapPage);
 
-  if (isSynthesisPage || isMapPage) {
+  if (isSkillsPage || isSynthesisPage || isMapPage) {
     homeContent.hidden = true;
     detailScreen.hidden = true;
     sectionScreen.hidden = false;
-    if (isSynthesisPage) {
+    if (isSkillsPage) {
+      if (skillMatch && skill) {
+        renderSkillDetails(skill);
+      } else if (skillMatch) {
+        sectionScreen.innerHTML = `
+          <a class="back-link" href="#skills"><span aria-hidden="true">←</span> Voltar às Skills</a>
+          <section class="detail-card"><h1 class="detail-title">Skill não encontrada</h1><p class="detail-unknown">Não existe uma skill catalogada com este identificador.</p></section>
+        `;
+      } else {
+        renderSkillsPage();
+      }
+    } else if (isSynthesisPage) {
       renderSynthesisPage();
     } else {
       renderMapPage();
@@ -1255,6 +1589,39 @@ searchInput.addEventListener("input", renderSlimes);
 typeFilter.addEventListener("change", renderSlimes);
 sortSelect.addEventListener("change", renderSlimes);
 window.addEventListener("hashchange", renderRoute);
+function showHeroSlide(index: number): void {
+  activeHeroSlideIndex = (index + heroSlides.length) % heroSlides.length;
+  heroSlides.forEach((slide, slideIndex) => {
+    slide.hidden = slideIndex !== activeHeroSlideIndex;
+  });
+  heroCarouselProgress.style.setProperty("--hero-slide-duration", `${HERO_SLIDE_DURATION_MS}ms`);
+  heroCarouselProgress.classList.remove("is-running");
+  void heroCarouselProgress.offsetWidth;
+  heroCarouselProgress.classList.add("is-running");
+}
+showHeroSlide(activeHeroSlideIndex);
+window.setInterval(() => showHeroSlide(activeHeroSlideIndex + 1), HERO_SLIDE_DURATION_MS);
+const closeMobileMenu = () => {
+  primaryNavigation.classList.remove("is-open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Abrir menu");
+};
+menuToggle.addEventListener("click", () => {
+  const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+  primaryNavigation.classList.toggle("is-open", !isOpen);
+  menuToggle.setAttribute("aria-expanded", String(!isOpen));
+  menuToggle.setAttribute("aria-label", isOpen ? "Abrir menu" : "Fechar menu");
+});
+primaryNavigation.addEventListener("click", (event) => {
+  if (event.target instanceof Element && event.target.closest("a")) {
+    closeMobileMenu();
+  }
+});
+document.addEventListener("click", (event) => {
+  if (event.target instanceof Element && !event.target.closest(".topbar")) {
+    closeMobileMenu();
+  }
+});
 detailScreen.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) {
@@ -1279,6 +1646,11 @@ detailScreen.addEventListener("click", (event) => {
   section.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && menuToggle.getAttribute("aria-expanded") === "true") {
+    closeMobileMenu();
+    menuToggle.focus();
+    return;
+  }
   if (event.key === "/" && !(event.target instanceof HTMLInputElement)) {
     event.preventDefault();
     searchInput.focus();
@@ -1291,3 +1663,4 @@ document.addEventListener("keydown", (event) => {
 });
 
 renderSlimes();
+renderRoute();

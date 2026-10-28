@@ -683,7 +683,7 @@ export const slimes: Slime[] = [
     traits: ["swimming"],
     skills: [
       "water-ball",
-      "aqua-heal",
+      "aqua-status",
       "power-swing",
       "force-dash",
       "power-upper",

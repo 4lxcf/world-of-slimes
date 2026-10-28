@@ -1,8 +1,11 @@
+import type { SlimeTypeId } from "./types";
+
 export const skills = [
   {
     id: "water-ball",
     name: "Water Ball",
-    type: "magic",
+    category: ["magic"],
+    type: "water",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
@@ -10,7 +13,8 @@ export const skills = [
   {
     id: "leaf-spread",
     name: "Leaf Spread",
-    type: "magic",
+    category: ["magic"],
+    type: "grass",
     mpCost: { min: 44, max: 44 },
     cooldown: { min: 10.9, max: 10.9 },
     damage: { min: 6, max: 6 },
@@ -18,7 +22,8 @@ export const skills = [
   {
     id: "grass-shot",
     name: "Grass Shot",
-    type: "magic",
+    category: ["magic"],
+    type: "grass",
     mpCost: { min: 16, max: 16 },
     cooldown: { min: 3.1, max: 3.1 },
     damage: { min: 11, max: 11 },
@@ -26,7 +31,8 @@ export const skills = [
   {
     id: "grass-needle",
     name: "Grass Needle",
-    type: "magic",
+    category: ["magic"],
+    type: "grass",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
@@ -34,7 +40,8 @@ export const skills = [
   {
     id: "wind-ball",
     name: "Wind Ball",
-    type: "magic",
+    category: ["magic"],
+    type: "wind",
     mpCost: { min: 15, max: 15 },
     cooldown: { min: 3.1, max: 3.4 },
     damage: { min: 11, max: 20 },
@@ -42,7 +49,8 @@ export const skills = [
   {
     id: "dark-orb",
     name: "Dark Orb",
-    type: "magic",
+    category: ["magic"],
+    type: "dark",
     mpCost: { min: 15, max: 15 },
     cooldown: { min: 2.9, max: 3.8 },
     damage: { min: 6, max: 30 },
@@ -50,7 +58,8 @@ export const skills = [
   {
     id: "dark-strike",
     name: "Dark Strike",
-    type: null,
+    category: ["physical"],
+    type: "dark",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
@@ -58,7 +67,8 @@ export const skills = [
   {
     id: "striking-power",
     name: "Striking Power",
-    type: "physical",
+    category: ["physical"],
+    type: "power",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
@@ -66,7 +76,8 @@ export const skills = [
   {
     id: "power-drive",
     name: "Power Drive",
-    type: "support",
+    category: ["status"],
+    type: "power",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
@@ -74,7 +85,8 @@ export const skills = [
   {
     id: "ice-ball",
     name: "Ice Ball",
-    type: "magic",
+    category: ["magic"],
+    type: "ice",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
@@ -82,7 +94,8 @@ export const skills = [
   {
     id: "poison-ball",
     name: "Poison Ball",
-    type: "magic",
+    category: ["magic"],
+    type: "poison",
     mpCost: { min: 15, max: 15 },
     cooldown: { min: 2.9, max: 3.1 },
     damage: { min: 12, max: 12 },
@@ -90,7 +103,8 @@ export const skills = [
   {
     id: "poison-bang",
     name: "Poison Bang",
-    type: "magic",
+    category: ["magic"],
+    type: "poison",
     mpCost: { min: 51, max: 51 },
     cooldown: { min: 9.9, max: 9.9 },
     damage: { min: 31, max: 31 },
@@ -98,7 +112,8 @@ export const skills = [
   {
     id: "light-orb",
     name: "Light Orb",
-    type: "magic",
+    category: ["magic"],
+    type: "light",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
@@ -106,6 +121,7 @@ export const skills = [
   {
     id: "magic-orb",
     name: "Magic Orb",
+    category: ["magic"],
     type: "magic",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
@@ -114,7 +130,8 @@ export const skills = [
   {
     id: "power-swing",
     name: "Power Swing",
-    type: "physical",
+    category: ["physical"],
+    type: "power",
     mpCost: { min: 21, max: 21 },
     cooldown: { min: 4.6, max: 4.6 },
     damage: { min: 57, max: 57 },
@@ -122,15 +139,17 @@ export const skills = [
   {
     id: "leaf-boomerang",
     name: "Leaf Boomerang",
-    type: "magic",
+    category: ["magic"],
+    type: "grass",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
   },
   {
-    id: "aqua-heal",
-    name: "Aqua Heal",
-    type: "heal",
+    id: "aqua-status",
+    name: "Aqua Status",
+    category: ["status"],
+    type: "water",
     mpCost: { min: 48, max: 48 },
     cooldown: { min: 11.8, max: 11.8 },
     damage: { min: 54, max: 54 },
@@ -138,7 +157,8 @@ export const skills = [
   {
     id: "force-dash",
     name: "Force Dash",
-    type: "physical",
+    category: ["physical"],
+    type: "power",
     mpCost: { min: 31, max: 31 },
     cooldown: { min: 7.9, max: 7.9 },
     damage: { min: 57, max: 57 },
@@ -146,7 +166,8 @@ export const skills = [
   {
     id: "power-upper",
     name: "Power Upper",
-    type: "physical",
+    category: ["physical"],
+    type: "power",
     mpCost: { min: 33, max: 33 },
     cooldown: { min: 11.2, max: 11.2 },
     damage: { min: 77, max: 77 },
@@ -154,7 +175,8 @@ export const skills = [
   {
     id: "stone-shot",
     name: "Stone Shot",
-    type: "physical",
+    category: ["physical"],
+    type: "ground",
     mpCost: { min: null, max: null },
     cooldown: { min: null, max: null },
     damage: { min: null, max: null },
@@ -162,6 +184,7 @@ export const skills = [
   {
     id: "magic-sonic-boom",
     name: "Magic Sonic Boom",
+    category: ["magic"],
     type: "magic",
     mpCost: { min: 37, max: 37 },
     cooldown: { min: 6.1, max: 6.1 },
@@ -170,7 +193,8 @@ export const skills = [
   {
     id: "sonic-boom",
     name: "Sonic Boom",
-    type: "magic",
+    category: ["magic"],
+    type: "wind",
     mpCost: { min: 37, max: 37 },
     cooldown: { min: 7.0, max: 7.0 },
     damage: { min: 26, max: 26 },
@@ -178,6 +202,7 @@ export const skills = [
   {
     id: "magic-flash",
     name: "Magic Flash",
+    category: ["magic"],
     type: "magic",
     mpCost: { min: 54, max: 54 },
     cooldown: { min: 9.1, max: 9.1 },
@@ -186,7 +211,8 @@ export const skills = [
   {
     id: "arcane-light",
     name: "Arcane Light",
-    type: "heal",
+    category: ["status"],
+    type: "light",
     mpCost: { min: 60, max: 60 },
     cooldown: { min: 15.2, max: 15.2 },
     damage: { min: 30, max: 30 },
@@ -194,15 +220,17 @@ export const skills = [
   {
     id: "electric-orb",
     name: "Electric Orb",
-    type: "magic",
+    category: ["magic"],
+    type: "electric",
     mpCost: { min: 15, max: 15 },
     cooldown: { min: 3.2, max: 3.7 },
     damage: { min: 9, max: 15 },
   },
   {
     id: "lightning-dash",
-    name: "Electric Orb",
-    type: "physical",
+    name: "Lightning Dash",
+    category: ["physical"],
+    type: "electric",
     mpCost: { min: 31, max: 31 },
     cooldown: { min: 9.6, max: 9.6 },
     damage: { min: 14, max: 15 },
@@ -210,7 +238,8 @@ export const skills = [
   {
     id: "iron-shot",
     name: "Iron Shot",
-    type: "magic",
+    category: ["magic"],
+    type: "metal",
     mpCost: { min: 16, max: 16 },
     cooldown: { min: 3.5, max: 3.5 },
     damage: { min: 14, max: 14 },
@@ -218,7 +247,8 @@ export const skills = [
   {
     id: "dark-swing",
     name: "Dark Swing",
-    type: "physical",
+    category: ["physical"],
+    type: "dark",
     mpCost: { min: 21, max: 21 },
     cooldown: { min: 5.0, max: 5.7 },
     damage: { min: 20, max: 42 },
@@ -226,6 +256,7 @@ export const skills = [
 ] as const;
 
 export type SkillId = (typeof skills)[number]["id"];
+export type SkillCategory = "physical" | "magic" | "status";
 export type SkillRange = {
   min: number | null;
   max: number | null;
@@ -233,7 +264,8 @@ export type SkillRange = {
 export type Skill = {
   id: SkillId;
   name: string;
-  type: "physical" | "magic" | "support" | "heal" | null;
+  category: readonly SkillCategory[] | null;
+  type: SlimeTypeId | null;
   mpCost: SkillRange;
   cooldown: SkillRange;
   damage: SkillRange;
