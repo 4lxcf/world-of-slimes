@@ -197,11 +197,13 @@ const synthesisRows: SynthesisRow[] = [
   ["108031061070sigil", 108, 31, 61, 70, ["wisp-sigil", "thunder-wisp-sigil", "stella-sigil"], null],
   ["115031057063", 115, 31, 57, 63, [], null],
   ["115031057063ring", 115, 31, 70, 64, ["ladif-ring"], null],
-  ["null10762", null, null, 107, 62, ["kobolds-crystal"], null,, 34],
+  ["null060062", null, null, 60, 62, null, null, "required-undiscovered", 34],
+  ["null107062", null, null, 107, 62, null, null, "required-undiscovered", 34],
   ["null017024", null, null, 17, 24, null, null, "required-undiscovered", 7],
   ["null017025", null, null, 17, 25, null, null, "required-undiscovered", 7],
-  ["null10762", null, null, 17, 32, null, null, "required-undiscovered", 7],
-  ["null10762", null, null, 25, 32, null, null, "required-undiscovered", 7],
+  ["null017032", null, null, 17, 32, null, null, "required-undiscovered", 7],
+  ["null025032", null, null, 25, 32, null, null, "required-undiscovered", 7],
+  ["null065068", null, null, 65, 68, null, null, "required-undiscovered", 31],
 ];
 
 export const syntheses: SynthesisRecipe[] = synthesisRows.map(([
