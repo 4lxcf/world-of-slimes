@@ -286,6 +286,12 @@ function formatRecipeLevel(recipe: (typeof syntheses)[number]): string {
   return formatSynthesisLevel(recipe.requiredLevel);
 }
 
+function getSynthesisResultLabel(recipe: (typeof syntheses)[number]): string {
+  return recipe.resultSlimeId === null && recipe.ingredientStatus === "known"
+    ? "Síntese ainda não realizada"
+    : "Resultado não descoberto";
+}
+
 function isSortKey(value: string): value is SortKey {
   return value === "id" || value === "name";
 }
@@ -498,15 +504,15 @@ function renderDetailSynthesisRecipe(
       <span class="synthesis-part-id">#${String(slimeId).padStart(3, "0")}</span>
     </div>`;
   };
-  const renderRecipeResult = (slimeId: number | null) => {
-    if (slimeId === null) {
+  const renderRecipeResult = (recipe: (typeof syntheses)[number]) => {
+    if (recipe.resultSlimeId === null) {
       return `<div class="synthesis-part">
         <span class="synthesis-part-role">RESULTADO</span>
         <span class="synthesis-result-placeholder" aria-hidden="true">?</span>
-        <strong class="synthesis-result-unknown-name">Resultado não descoberto</strong>
+        <strong class="synthesis-result-unknown-name">${getSynthesisResultLabel(recipe)}</strong>
       </div>`;
     }
-    return renderRecipeSlime(slimeId, "RESULTADO");
+    return renderRecipeSlime(recipe.resultSlimeId, "RESULTADO");
   };
   const level = formatRecipeLevel(recipe);
   const renderIngredient = (
@@ -574,7 +580,7 @@ function renderDetailSynthesisRecipe(
       ${renderRecipeSlime(subSlimeId, "SUB SLIME")}
       <span class="synthesis-operator synthesis-add" aria-hidden="true">+</span>
       <div class="synthesis-ingredient-options">${ingredientOptions}</div>
-      ${renderRecipeResult(recipe.resultSlimeId)}
+      ${renderRecipeResult(recipe)}
     </div>
     <div class="synthesis-recipe-meta">
       <span class="synthesis-meta-item"><span>LEVEL</span><strong>${escapeHtml(level)}</strong></span>
@@ -725,7 +731,7 @@ function renderPendingSyntheses(): string {
     const level = formatRecipeLevel(recipe);
     const itemNames = escapeHtml(getSynthesisIngredientsLabel(recipe.ingredients, recipe.ingredientStatus));
     const result = recipe.resultSlimeId === null
-      ? '<span class="recipe-result recipe-result-unknown">Resultado não descoberto</span>'
+      ? `<span class="recipe-result recipe-result-unknown">${getSynthesisResultLabel(recipe)}</span>`
       : `<span class="recipe-result recipe-result-slime">${renderSlimeAvatar(
         getSlimeForSynthesis(recipe.resultSlimeId),
         "recipe-avatar",
@@ -824,7 +830,7 @@ function renderSynthesisResults(): void {
       return `<article class="simulator-result">
         ${resultSlime
           ? `<div class="simulator-result-slime">${renderSlimeAvatar(resultSlime, "simulator-avatar")}<div><a href="#slime/${resultSlime.id}">${escapeHtml(resultSlime.name ?? `Slime #${String(resultSlime.id).padStart(3, "0")}`)}</a><span class="simulator-result-number">#${String(resultSlime.id).padStart(3, "0")}</span></div></div>`
-          : '<div class="simulator-result-slime simulator-result-unknown"><span class="synthesis-result-placeholder" aria-hidden="true">?</span><strong>Resultado não descoberto</strong></div>'}
+          : `<div class="simulator-result-slime simulator-result-unknown"><span class="synthesis-result-placeholder" aria-hidden="true">?</span><strong>${getSynthesisResultLabel(recipe)}</strong></div>`}
         <div class="simulator-result-meta">
           <span><strong>Main slime:</strong> ${escapeHtml(mainSlime.name ?? `Slime #${String(mainSlime.id).padStart(3, "0")}`)} · ${escapeHtml(mainLevelNote)}</span>
           <span><strong>Sub slime:</strong> ${escapeHtml(subSlime.name ?? `Slime #${String(subSlime.id).padStart(3, "0")}`)}</span>

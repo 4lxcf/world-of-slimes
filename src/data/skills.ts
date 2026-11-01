@@ -250,7 +250,7 @@ export const skills = [
     category: ["physical"],
     type: "dark",
     mpCost: { min: 21, max: 21 },
-    cooldown: { min: 5.0, max: 5.7 },
+    cooldown: { min: 5.0, max: 5.9 },
     damage: { min: 20, max: 42 },
   },
 ] as const;

@@ -37,6 +37,7 @@ export const slimes: Slime[] = [
       { locationId: "hidden-shore-2", levelRange: null, timeOfDay: "Both" },
       { locationId: "hidden-shore-3", levelRange: null, timeOfDay: "Both" },
       { locationId: "spray-beach-ferry", levelRange: {min: 5, max: 7}, timeOfDay: "Both" },
+      { locationId: "spray-beach-entrance", levelRange: {min: 3, max: 5}, timeOfDay: "Both" },
     ],
     traits: null,
     skills: null,
@@ -448,15 +449,12 @@ export const slimes: Slime[] = [
     type1: "grass",
     type2: "poison",
     locations: [
-      {
-        locationId: "abandoned-farmland",
-        levelRange: { min: 5, max: 7 },
-        timeOfDay: "Night",
-      },
+      { locationId: "abandoned-farmland", levelRange: { min: 5, max: 7 }, timeOfDay: "Night" },
+      { locationId: "cave-entrance", levelRange: { min: 7, max: 8 }, timeOfDay: "Night" },
     ],
     traits: ["bond"],
     skills: ["poison-ball"],
-    drops: ["small-slime-fragment", "poison-mandrakes-leaf"],
+    drops: ["small-slime-fragment", "poison-mandrakes-leaf", "verdant-core-fragment"],
   },
   {
     id: 30,
@@ -528,11 +526,7 @@ export const slimes: Slime[] = [
     type1: "metal",
     type2: null,
     locations: [
-      {
-        locationId: "cave-entrance",
-        levelRange: { min: 6, max: 8 },
-        timeOfDay: "Both",
-      },
+      { locationId: "cave-entrance", levelRange: { min: 6, max: 8 }, timeOfDay: "Both" },
     ],
     traits: ["mining"],
     skills: null,

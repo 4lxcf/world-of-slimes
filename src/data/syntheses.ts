@@ -22,7 +22,7 @@ type SynthesisRow = readonly [
   subSlimeId: number,
   ingredients: ItemId[] | null,
   successChance: number | null,
-  ingredientStatus?: "undetermined" | "required-undiscovered",
+  ingredientStatus?: "known" | "undetermined" | "required-undiscovered",
   minimumMainLevel?: number,
 ];
 
@@ -53,6 +53,7 @@ const synthesisRows: SynthesisRow[] = [
   ["033031052065scale", 33, 31, 52, 65, ["electric-lizard-scale"], 5.68],
   ["033025065046scale", 33, 31, 61, 47, ["electric-lizard-scale"], null],
   ["039013025025scale", 39, 13, 25, 25, ["lizard-scale"], null],
+  ["039013025025scale", 39, 13, 25, 25, ["bass-scale"], 68.62],
   ["039013031025n", 39, 13, 31, 25, [], null],
   ["039013032024n", 39, 13, 32, 24, [], null],
   ["039013038025n", 39, 13, 38, 25, [], null],
@@ -199,15 +200,15 @@ const synthesisRows: SynthesisRow[] = [
   ["115031057063ring", 115, 31, 70, 64, ["ladif-ring"], null],
   ["null060062", null, null, 60, 62, null, null, "required-undiscovered", 34],
   ["null107062", null, null, 107, 62, null, null, "required-undiscovered", 34],
-  ["null017024", null, null, 17, 24, null, null, "required-undiscovered", 7],
-  ["null017025", null, null, 17, 25, null, null, "required-undiscovered", 7],
-  ["null017032", null, null, 17, 32, null, null, "required-undiscovered", 7],
   ["null025032", null, null, 25, 32, null, null, "required-undiscovered", 7],
   ["null065068", null, null, 65, 68, null, null, "required-undiscovered", 31],
+  ["null017024", null, 13, 17, 24, ["slick-vent"], 25.66],
+  ["null017025", null, 13, 17, 25, ["slick-vent"], 25.66],
+  ["null017032", null, 13, 17, 32, ["slick-vent"], 25.66, "known"],
 ];
 
 export const syntheses: SynthesisRecipe[] = synthesisRows.map(([
-    id,
+  id,
     resultSlimeId,
     requiredLevel,
     mainSlimeId,
@@ -217,11 +218,18 @@ export const syntheses: SynthesisRecipe[] = synthesisRows.map(([
     ingredientStatus,
     minimumMainLevel,
   ]) => {
-    if (resultSlimeId === null && minimumMainLevel === undefined) {
+    if (resultSlimeId === null && requiredLevel === null && minimumMainLevel === undefined) {
       throw new Error(`Síntese "${id}" sem o level mínimo conhecido do Main slime.`);
     }
-    if (ingredientStatus !== undefined && ingredients !== null) {
-      throw new Error(`Síntese "${id}" não pode definir ingredientStatus com ingredients conhecidos.`);
+    if (ingredientStatus === "known" && ingredients === null) {
+      throw new Error(`Síntese "${id}" precisa dos ingredients para marcar a receita como conhecida.`);
+    }
+    if (
+      ingredientStatus !== undefined &&
+      ingredientStatus !== "known" &&
+      ingredients !== null
+    ) {
+      throw new Error(`Síntese "${id}" não pode marcar ingredients conhecidos como não descobertos.`);
     }
     if (ingredientStatus === "required-undiscovered" && minimumMainLevel === undefined) {
       throw new Error(`Síntese "${id}" precisa do level mínimo para marcar o ingredient não descoberto.`);
