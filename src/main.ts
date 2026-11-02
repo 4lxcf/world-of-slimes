@@ -6,7 +6,9 @@ import { locations } from "./data/locations";
 import { skills, type Skill, type SkillCategory, type SkillRange } from "./data/skills";
 import { syntheses } from "./data/syntheses";
 import { traits } from "./data/traits";
+import { traitImages } from "./data/trait-images";
 import { slimeTypes, type SlimeTypeId } from "./data/types";
+import { typeImages } from "./data/type-images";
 import { getSlimeList, type SortKey } from "./lib/slime-list";
 import "./styles.css";
 
@@ -46,14 +48,30 @@ function renderTraitCell(slime: Slime): string {
     return `<span class="type-empty">${escapeHtml(getTraitStatusText(slime))}</span>`;
   }
 
-  const traits = slime.traits.map((traitId) => {
+  const renderedTraits = slime.traits.map((traitId) => {
     const name = traitNames.get(traitId);
     if (!name) {
       throw new Error(`Trait não cadastrada: ${traitId}`);
     }
-    return `<li>${escapeHtml(name)}</li>`;
+    const imagePath = traitImages[traitId];
+    if (!imagePath) {
+      throw new Error(`Imagem da Trait não cadastrada: ${traitId}`);
+    }
+    const trait = traits.find(({ id }) => id === traitId);
+    if (!trait) {
+      throw new Error(`Trait não cadastrada: ${traitId}`);
+    }
+    return `<span class="summary-trait" title="${escapeHtml(trait.description)}"><img class="trait-icon" src="${imagePath}" alt="" aria-hidden="true">${escapeHtml(name)}</span>`;
   }).join("");
-  return `<ul class="detail-list trait-cell-list">${traits}</ul>`;
+  return `<div class="summary-traits list-traits">${renderedTraits}</div>`;
+}
+
+function renderTypeTag(type: SlimeTypeId): string {
+  const imagePath = typeImages[type];
+  if (!imagePath) {
+    throw new Error(`Imagem do tipo não cadastrada: ${type}`);
+  }
+  return `<span class="type-tag type-tag-${escapeHtml(type)}"><span class="type-tag-icon" aria-hidden="true"><img src="${imagePath}" alt=""></span>${escapeHtml(getTypeName(type))}</span>`;
 }
 
 const slimesById = new Map(slimes.map((slime) => [slime.id, slime]));
@@ -78,7 +96,7 @@ function renderFeaturedSlime(slime: Slime, index: number): string {
   }
   const types = [slime.type1, slime.type2]
     .filter((type): type is SlimeTypeId => type !== null)
-    .map((type) => `<span class="type-tag type-tag-${escapeHtml(type)}"><i></i>${escapeHtml(getTypeName(type))}</span>`)
+    .map(renderTypeTag)
     .join("");
 
   return `<article class="hero-slide" data-hero-slide aria-label="${index + 1} de ${featuredSlimes.length}" aria-roledescription="slide"${index === 0 ? "" : " hidden"}>
@@ -353,7 +371,11 @@ function renderSummaryTraits(slime: Slime): string {
     if (!trait) {
       throw new Error(`Trait não cadastrada: ${traitId}`);
     }
-    return `<span class="summary-trait" title="${escapeHtml(trait.description)}">${escapeHtml(trait.name)}</span>`;
+    const imagePath = traitImages[traitId];
+    if (!imagePath) {
+      throw new Error(`Imagem da Trait não cadastrada: ${traitId}`);
+    }
+    return `<span class="summary-trait" title="${escapeHtml(trait.description)}"><img class="trait-icon" src="${imagePath}" alt="" aria-hidden="true">${escapeHtml(trait.name)}</span>`;
   }).join("")}</div>`;
 }
 
@@ -603,7 +625,7 @@ function renderDetailSynthesisRecipe(
 function renderSlimeDetails(slime: Slime): void {
   const types = [slime.type1, slime.type2]
     .filter((type): type is SlimeTypeId => type !== null)
-    .map((type) => `<span class="type-tag type-tag-${escapeHtml(type)}"><i></i>${escapeHtml(getTypeName(type))}</span>`)
+    .map(renderTypeTag)
     .join("");
   const locationsLabel = slime.locations === null
     ? "A catalogar"
@@ -1199,7 +1221,7 @@ function renderSkillElementalType(type: Skill["type"]): string {
   if (type === null) {
     return '<span class="type-empty">A catalogar</span>';
   }
-  return `<span class="type-tag type-tag-${escapeHtml(type)}"><i></i>${escapeHtml(getTypeName(type))}</span>`;
+  return renderTypeTag(type);
 }
 
 function formatSkillRange({ min, max }: SkillRange, suffix = ""): string {
@@ -1590,9 +1612,9 @@ function renderSlimes(): void {
               <a class="slime-link" href="#slime/${slime.id}">${escapeHtml(slime.name ?? "Nome a confirmar")}</a>
             </div>
           </td>
-          <td>${slime.type1 ? `<span class="type-tag type-tag-${escapeHtml(slime.type1)}"><i></i>${escapeHtml(getTypeName(slime.type1))}</span>` : '<span class="type-empty">A catalogar</span>'}</td>
-          <td>${slime.type2 ? `<span class="type-tag type-tag-${escapeHtml(slime.type2)}"><i></i>${escapeHtml(getTypeName(slime.type2))}</span>` : '<span class="type-empty">—</span>'}</td>
-          <td class="detail-cell">${renderTraitCell(slime)}</td>
+          <td>${slime.type1 ? renderTypeTag(slime.type1) : '<span class="type-empty">A catalogar</span>'}</td>
+          <td>${slime.type2 ? renderTypeTag(slime.type2) : '<span class="type-empty">—</span>'}</td>
+          <td class="detail-cell trait-cell">${renderTraitCell(slime)}</td>
         </tr>
       `,
     )
