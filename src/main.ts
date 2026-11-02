@@ -80,7 +80,7 @@ const locationsById = new Map(locations.map((location) => [location.id, location
 const skillsById = new Map(skills.map((skill) => [skill.id, skill]));
 const typeNames = new Map(slimeTypes.map(({ id, name }) => [id, name]));
 const traitNames = new Map(traits.map(({ id, name }) => [id, name]));
-const featuredSlimeIds = [104, 107, 105, 108, 115];
+const featuredSlimeIds = [105, 108, 115, 9, 7];
 const featuredSlimes = featuredSlimeIds.map((id) => {
   const slime = slimesById.get(id);
   if (!slime || !slime.name || !slimeImages[id]) {
@@ -179,6 +179,14 @@ app.innerHTML = `
             </select>
             <span class="select-chevron" aria-hidden="true">⌄</span>
           </label>
+          <label class="select-wrap">
+            <span class="sr-only">Filtrar por Trait</span>
+            <select id="trait-filter">
+              <option value="all">Todas as Traits</option>
+              ${traits.map(({ id, name }) => `<option value="${escapeHtml(id)}">${escapeHtml(name)}</option>`).join("")}
+            </select>
+            <span class="select-chevron" aria-hidden="true">⌄</span>
+          </label>
           <label class="select-wrap sort-wrap">
             <span class="sr-only">Ordenar lista</span>
             <select id="sort-by">
@@ -230,6 +238,7 @@ app.innerHTML = `
 
 const searchInput = getRequiredElement<HTMLInputElement>("#search");
 const typeFilter = getRequiredElement<HTMLSelectElement>("#type-filter");
+const traitFilter = getRequiredElement<HTMLSelectElement>("#trait-filter");
 const sortSelect = getRequiredElement<HTMLSelectElement>("#sort-by");
 const rows = getRequiredElement<HTMLTableSectionElement>("#slime-rows");
 const emptyState = getRequiredElement<HTMLDivElement>("#empty-state");
@@ -324,6 +333,18 @@ function getSelectedType(value: string): SlimeTypeId | "all" {
     throw new Error(`Tipo selecionado não cadastrado: ${value}`);
   }
   return type.id;
+}
+
+function getSelectedTrait(value: string): (typeof traits)[number]["id"] | "all" {
+  if (value === "all") {
+    return value;
+  }
+
+  const trait = traits.find(({ id }) => id === value);
+  if (!trait) {
+    throw new Error(`Trait selecionada não cadastrada: ${value}`);
+  }
+  return trait.id;
 }
 
 function getTypeName(typeId: SlimeTypeId): string {
@@ -1598,6 +1619,7 @@ function renderSlimes(): void {
   const filteredSlimes = getSlimeList(slimes, {
     query: searchInput.value,
     type: getSelectedType(typeFilter.value),
+    trait: getSelectedTrait(traitFilter.value),
     sortBy: sortSelect.value,
   });
 
@@ -1627,6 +1649,7 @@ function renderSlimes(): void {
 
 searchInput.addEventListener("input", renderSlimes);
 typeFilter.addEventListener("change", renderSlimes);
+traitFilter.addEventListener("change", renderSlimes);
 sortSelect.addEventListener("change", renderSlimes);
 window.addEventListener("hashchange", renderRoute);
 function showHeroSlide(index: number): void {

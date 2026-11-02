@@ -14,7 +14,7 @@ npm install
 npm run dev
 ```
 
-O Vite informa no terminal o endereço local para abrir no navegador.
+O Vite informa no terminal o endereço local; links `localhost` são abertos por padrão no navegador integrado do VS Code.
 
 ## Scripts
 

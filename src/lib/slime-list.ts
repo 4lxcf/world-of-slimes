@@ -1,4 +1,5 @@
 import type { Slime } from "../data/slimes";
+import type { TraitId } from "../data/traits";
 import type { SlimeTypeId } from "../data/types";
 
 export type SortKey = "id" | "name";
@@ -6,6 +7,7 @@ export type SortKey = "id" | "name";
 export type SlimeListOptions = {
   query: string;
   type: SlimeTypeId | "all";
+  trait: TraitId | "all";
   sortBy: SortKey;
 };
 
@@ -22,8 +24,11 @@ export function getSlimeList(slimes: Slime[], options: SlimeListOptions): Slime[
         options.type === "all" ||
         slime.type1 === options.type ||
         slime.type2 === options.type;
+      const matchesTrait =
+        options.trait === "all" ||
+        (slime.traits?.some((trait) => trait === options.trait) ?? false);
 
-      return matchesQuery && matchesType;
+      return matchesQuery && matchesType && matchesTrait;
     })
     .sort((first, second) => {
       if (options.sortBy === "name") {
