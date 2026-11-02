@@ -548,28 +548,40 @@ function renderDetailSynthesisRecipe(
       </div>
     </div>`;
   };
-  const ingredientOptions = recipes.flatMap((candidate) => {
-    const displayedRecipe = reversed
-      ? syntheses.find((entry) =>
-          entry.mainSlimeId === mainSlimeId &&
-          entry.subSlimeId === subSlimeId &&
-          entry.resultSlimeId === candidate.resultSlimeId &&
-          entry.requiredLevel === candidate.requiredLevel &&
-          entry.minimumMainLevel === candidate.minimumMainLevel &&
-          entry.ingredientStatus === candidate.ingredientStatus &&
-          JSON.stringify(entry.ingredients) === JSON.stringify(candidate.ingredients),
-        )
-      : candidate;
+  const ingredientOptions = new Map<string, {
+    recipe: (typeof syntheses)[number];
+    chance: number | null;
+  }>();
+  recipes.forEach((candidate) => {
+    const displayedRecipe = recipes.find((entry) =>
+      entry.mainSlimeId === mainSlimeId &&
+      entry.subSlimeId === subSlimeId &&
+      entry.resultSlimeId === candidate.resultSlimeId &&
+      entry.requiredLevel === candidate.requiredLevel &&
+      entry.minimumMainLevel === candidate.minimumMainLevel &&
+      entry.ingredientStatus === candidate.ingredientStatus &&
+      JSON.stringify(entry.ingredients) === JSON.stringify(candidate.ingredients),
+    );
     const chance = displayedRecipe?.successChance ?? null;
-    const ingredientIds = candidate.ingredients;
+    const key = JSON.stringify([
+      candidate.ingredientStatus,
+      candidate.ingredients,
+      chance,
+    ]);
+    if (!ingredientOptions.has(key)) {
+      ingredientOptions.set(key, { recipe: candidate, chance });
+    }
+  });
+  const renderedIngredientOptions = [...ingredientOptions.values()].flatMap(({ recipe, chance }) => {
+    const ingredientIds = recipe.ingredients;
     if (ingredientIds === null) {
-      return [renderIngredient(null, chance, candidate.ingredientStatus)];
+      return [renderIngredient(null, chance, recipe.ingredientStatus)];
     }
     if (ingredientIds.length === 0) {
-      return [renderIngredient(null, chance, candidate.ingredientStatus, true)];
+      return [renderIngredient(null, chance, recipe.ingredientStatus, true)];
     }
     return ingredientIds.map((itemId) =>
-      renderIngredient(itemId, chance, candidate.ingredientStatus),
+      renderIngredient(itemId, chance, recipe.ingredientStatus),
     );
   }).join("");
 
@@ -579,7 +591,7 @@ function renderDetailSynthesisRecipe(
       <button class="synthesis-operator synthesis-reverse" type="button" data-reverse-detail-recipe aria-label="Inverter Main slime e Sub slime" title="Inverter Main slime e Sub slime">⇄</button>
       ${renderRecipeSlime(subSlimeId, "SUB SLIME")}
       <span class="synthesis-operator synthesis-add" aria-hidden="true">+</span>
-      <div class="synthesis-ingredient-options">${ingredientOptions}</div>
+      <div class="synthesis-ingredient-options">${renderedIngredientOptions}</div>
       ${renderRecipeResult(recipe)}
     </div>
     <div class="synthesis-recipe-meta">

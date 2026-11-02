@@ -154,9 +154,9 @@ export const slimes: Slime[] = [
   },
   {
     id: 9,
-    name: null,
+    name: "Mega Aqualime",
     dataStatus: "pending",
-    type1: null,
+    type1: "water",
     type2: null,
     locations: null,
     traits: null,

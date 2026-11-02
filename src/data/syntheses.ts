@@ -29,6 +29,7 @@ type SynthesisRow = readonly [
 // Optional tuple values after successChance are ingredientStatus and minimumMainLevel.
 const synthesisRows: SynthesisRow[] = [
   ["006016003003n", 6, 16, 3, 3, [], null],
+  ["009031004004n", 9, 31, 4, 4, [], 50.31],
   ["018007026026n", 18, 7, 26, 26, ["tweety-hide", "tricky-hide", "icy-hide"], null],
   ["018010026016n", 18, 10, 26, 16, [], null],
   ["020019018036n", 20, 19, 18, 36, [], null],
@@ -42,7 +43,6 @@ const synthesisRows: SynthesisRow[] = [
   ["025010031029orb", 25, 10, 31, 29, ["poison-princes-orb"], null],
   ["025010031032orb", 25, 10, 31, 32, ["princes-orb"], null],
   ["028004002002leaf", 28, 4, 2, 2, ["mandrake-leaf"], 100.0],
-  ["030010002029leaf", 30, 10, 2, 29, ["mandrake-leaf"], null],
   ["030010003002n", 30, 10, 3, 2, [], null],
   ["030010022002leaf", 30, 10, 22, 2, ["mandrake-leaf", "nepenthes-leaf"], null],
   ["030010022028n", 30, 10, 22, 28, [], null],
@@ -65,6 +65,7 @@ const synthesisRows: SynthesisRow[] = [
   ["040019037031n", 40, 19, 37, 31, [], null],
   ["041010027017blade", 41, 10, 27, 17, ["rusty-sharp-blade"], null],
   ["041010035017blade", 41, 10, 35, 17, ["rusty-sharp-blade"], null],
+  ["041010035017blade", 41, 10, 17, 35, ["mole-sharp-blade"], 71.38],
   ["043016002046tentacle", 43, 16, 2, 46, ["melon-tentacle"], null],
   ["043016027042n", 43, 16, 27, 42, [], null],
   ["043016028046tentacle", 43, 16, 28, 46, ["melon-tentacle"], null],
@@ -147,6 +148,7 @@ const synthesisRows: SynthesisRow[] = [
   ["055019054034n", 55, 19, 54, 34, [], null],
   ["055019054041n", 55, 19, 54, 41, [], null],
   ["056016030016orb", 56, 16, 30, 16, ["poison-princes-orb"], null],
+  ["056016030016orb", 56, 16, 16, 30, ["poison-princes-orb"], 9.60],
   ["056016043016orb", 56, 16, 43, 16, ["princes-orb"], null],
   ["056016048042orb", 56, 16, 48, 42, ["dandelion-orb"], null],
   ["056016048043orb", 56, 16, 48, 43, ["dandelion-orb"], null],
@@ -205,6 +207,8 @@ const synthesisRows: SynthesisRow[] = [
   ["null017024", null, 13, 17, 24, ["slick-vent"], 25.66],
   ["null017025", null, 13, 17, 25, ["slick-vent"], 25.66],
   ["null017032", null, 13, 17, 32, ["slick-vent"], 25.66, "known"],
+  ["null057060", null, null, 57, 60, null, null, "required-undiscovered", 31],
+  ["null029002", null, null, 29, 2, null, null, "required-undiscovered", 13],
 ];
 
 export const syntheses: SynthesisRecipe[] = synthesisRows.map(([
