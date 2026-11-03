@@ -2803,12 +2803,10 @@ tbody tr:hover {
   padding: 2px 7px 2px 3px;
   border: 1px solid rgba(255, 255, 255, 0.46);
   border-radius: 999px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), 0 1px 2px rgba(32, 54, 42, 0.14);
   color: #fff;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.01em;
-  text-shadow: 0 1px 1px rgba(24, 45, 37, 0.28);
 }
 
 .type-tag-icon {
@@ -2828,58 +2826,69 @@ tbody tr:hover {
 }
 
 .type-tag-fire {
-  background: linear-gradient(135deg, #ed765b, #b94342);
+  border-color: #d64d4d;
+  background: #5a252b;
 }
 
 .type-tag-water {
-  background: linear-gradient(135deg, #54b9dc, #2875a8);
+  border-color: #2f8bd0;
+  background: #1b3d68;
 }
 
 .type-tag-grass {
-  background: linear-gradient(135deg, #73c37d, #38865c);
+  border-color: #78cf48;
+  background: #2f642a;
 }
 
 .type-tag-electric {
-  background: linear-gradient(135deg, #f1cf68, #bd8a2f);
+  border-color: #f0ca3d;
+  background: #66541d;
 }
 
 .type-tag-ground {
-  background: linear-gradient(135deg, #c59c6a, #87603f);
+  border-color: #ab9854;
+  background: #594d2b;
 }
 
 .type-tag-magic {
-  background: linear-gradient(135deg, #b27bd0, #704a9a);
+  border-color: #d56bbd;
+  background: #5c2c61;
 }
 
 .type-tag-wind {
-  background: linear-gradient(135deg, #49baa9, #147979);
+  border-color: #2bc8c2;
+  background: #175c60;
 }
 
 .type-tag-light {
-  background: linear-gradient(135deg, #f1d878, #c69a37);
+  border-color: #bab8b0;
+  background: #4a4845;
 }
 
 .type-tag-dark {
-  border-color: rgba(139, 211, 255, 0.72);
-  background: linear-gradient(135deg, #7569e2, #38328f);
-  box-shadow: inset 0 1px 0 rgba(219, 232, 255, 0.34), 0 1px 2px rgba(32, 54, 42, 0.14);
+  border-color: #8977e4;
+  background: #3d396e;
 }
 
 .type-tag-ice {
-  background: linear-gradient(135deg, #75d7e2, #438aaf);
+  border-color: #6bcfdb;
+  background: #286d79;
 }
 
 .type-tag-poison {
-  background: linear-gradient(135deg, #bd7ac3, #714377);
+  border-color: #b35be2;
+  background: #592c81;
 }
 
 .type-tag-metal,
 .type-tag-steel {
-  background: linear-gradient(135deg, #9eabb5, #566875);
+  border-color: #929eaa;
+  background: #4b515c;
 }
 
 .type-tag-power {
-  background: linear-gradient(135deg, #e58d74, #a54f4f);
+  border-color: #d97b2b;
+  background: #633b20;
 }
 
 .type-tag-ground .type-tag-icon,

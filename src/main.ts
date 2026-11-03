@@ -80,7 +80,7 @@ const locationsById = new Map(locations.map((location) => [location.id, location
 const skillsById = new Map(skills.map((skill) => [skill.id, skill]));
 const typeNames = new Map(slimeTypes.map(({ id, name }) => [id, name]));
 const traitNames = new Map(traits.map(({ id, name }) => [id, name]));
-const featuredSlimeIds = [105, 108, 115, 9, 7];
+const featuredSlimeIds = [7, 9, 33, 68, 72];
 const featuredSlimes = featuredSlimeIds.map((id) => {
   const slime = slimesById.get(id);
   if (!slime || !slime.name || !slimeImages[id]) {
